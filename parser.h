@@ -182,14 +182,6 @@ public:
 
 	std::shared_ptr<variable_declaration> parse_variable_declaration(token type)
 	{
-
-		// TODO: clean up this hackiness
-		//if (type.type() == Keywords().STRING()) {
-		//	type.lexeme(typeid(std::string).name());
-		//}
-		if (type.type() == Keywords().IGNORE()) {
-			type.lexeme("");
-		}
 		token name = m_pi.consume(TOKEN_TYPE_WORD, "expect variable name in declaration");
 		std::shared_ptr<expression> expr = nullptr;
 		if (m_pi.match(Keywords().EQUAL())) {

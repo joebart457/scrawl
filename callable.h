@@ -1,13 +1,19 @@
 #pragma once
 
+#ifndef __INCLUDE_CALLABLE_H
+#define __INCLUDE_CALLABLE_H
+
+
 #include <any>
 #include <memory>
+#include <string>
 #include <vector>
-#include <sstream>
+#include <iostream>
 
-#include "interpreter.h"
-#include "environment.h"
-#include "exceptions.h"
+#include "statement.h"
+
+class interpreter;
+struct activation_record;
 
 class callable :
 	public std::enable_shared_from_this<callable>
@@ -19,27 +25,9 @@ public:
 	virtual std::any call(std::shared_ptr<interpreter> c, ::std::vector<std::any> arguments) = 0;
 
 
-	virtual std::shared_ptr<callable> registerParameter(const param& p)
-	{
-		m_params.push_back(p);
-		return shared_from_this();
-	}
+	virtual std::shared_ptr<callable> registerParameter(const param& p);
 
-	virtual std::string getSignature() 
-	{
-		std::ostringstream oss;
-		oss << m_szName << "(";
-
-		if (m_params.size() >= 1) {
-			oss << m_params.at(0).type;
-		}
-
-		for (unsigned int i{ 1 }; i < m_params.size(); i++) {
-			oss << "," << m_params.at(i).type;
-		}
-		oss << ")";
-		return oss.str();
-	}
+	virtual std::string getSignature();
 
 protected:
 	std::string m_szName{ "" };
@@ -56,22 +44,7 @@ public:
 		:callable(szName), m_hFn{ fn } {}
 	~native_fn() {}
 
-	std::any call(std::shared_ptr<interpreter> c, std::vector<std::any> args)
-	{
-		check_context(c);
-		if (args.size() != m_params.size()) {
-			throw ProgramException("parity_mismatch", "expected " + std::to_string(m_params.size())
-				+ " arguments but got " + std::to_string(args.size()), location());
-		}
-
-		std::vector<::std::any> cleanedArgs;
-		for (unsigned int i{ 0 }; i < m_params.size(); i++) {
-			std::any arg = c->assert_or_convert_type(m_params.at(i).type, args.at(i), location());
-			cleanedArgs.push_back(arg);
-		}
-
-		return m_hFn(c, cleanedArgs);
-	}
+	std::any call(std::shared_ptr<interpreter> c, std::vector<std::any> args);
 
 
 private:
@@ -84,62 +57,14 @@ class custom_fn :
 public:
 	custom_fn(std::string szName, std::shared_ptr<activation_record> ar, std::vector<std::shared_ptr<statement>> body, std::vector<param> parameters, const location& loc)
 		:callable{ szName }, m_enclosing{ ar }, m_body{ body }, m_parameters{ parameters }, m_loc{ loc } {}
+	custom_fn(custom_fn& fn)
+		:callable{ fn.m_szName }, m_enclosing{ fn.m_enclosing }, m_body{ fn.m_body }, m_parameters{ fn.m_parameters }, m_loc{ fn.m_loc }{}
+
 	~custom_fn() {}
 
-	std::any call(std::shared_ptr<interpreter> c, std::vector<std::any> arguments)
-	{
-		check_context(c);
-		std::shared_ptr<execution_context> context = c->get_context();
-		check_context(context);
+	std::any call(std::shared_ptr<interpreter> c, std::vector<std::any> arguments);
 
-		// Create closure
-		context->push_ar(m_enclosing);
-		context->push_ar(m_szName);
-
-		try {
-			
-			// Check parity
-			if (arguments.size() != m_parameters.size()) {
-				throw ProgramException("parity_mismatch", "expected " + std::to_string(m_parameters.size())
-					+ " arguments but got " + std::to_string(arguments.size()), m_loc);
-			}
-
-			// Clean arguments and define parameters in this scope
-			for (unsigned int i{ 0 }; i < m_parameters.size(); i++) {
-				std::any cleanedObject = c->assert_or_convert_type(m_parameters.at(i).type, arguments.at(i), m_loc);
-				context->define(m_parameters.at(i).name, cleanedObject, false, m_loc);
-			}
-
-			// Execute function body
-			c->interpret(m_body);
-		}
-		catch (ReturnException ret) {
-
-			// Reset environment
-			context->pop_ar();
-			context->pop_ar();
-
-			// Return value
-			return ret.value();
-		}
-		catch (ProgramException pe) {
-
-			// Reset environment
-			context->pop_ar();
-			context->pop_ar();
-
-			// throw error
-			throw pe;
-		}
-		//Reset Environment
-		context->pop_ar();
-		context->pop_ar();
-
-		// If there are no errors and no return has been caught
-		// just return null value
-		return nullptr;
-	}
-
+	void setEnclosing(std::shared_ptr<activation_record> ar);
 private:
 	std::shared_ptr<activation_record> m_enclosing;
 	std::vector<std::shared_ptr<statement>> m_body;
@@ -158,32 +83,12 @@ public:
 		:callable(szName), m_hFn{ fn } {}
 	~unary_fn() {}
 
-	std::any call(std::shared_ptr<interpreter> c, std::vector<std::any> args)
-	{
-		check_context(c);
-		if (args.size() != 1) {
-			throw ProgramException("parity_mismatch", "expected 1 argument but got " + std::to_string(args.size()), location());
-		}
+	std::any call(std::shared_ptr<interpreter> c, std::vector<std::any> args);
 
 
-		std::any cleanedArg = c->assert_or_convert_type(m_param.type, args.at(0), location());
+	std::shared_ptr<callable> registerParameter(const param& p);
 
-		return m_hFn(c, cleanedArg);
-	}
-
-
-	std::shared_ptr<callable> registerParameter(const param& p)
-	{
-		m_param = p;
-		return std::static_pointer_cast<callable>(shared_from_this());
-	}
-
-	virtual std::string getSignature()
-	{
-		std::ostringstream oss;
-		oss << m_szName << "(" << m_param.type << ")";
-		return oss.str();
-	}
+	virtual std::string getSignature();
 
 
 private:
@@ -202,24 +107,13 @@ public:
 		:callable(szName), m_hFn{ fn } {}
 	~binary_fn() {}
 
-	std::any call(std::shared_ptr<interpreter> c, std::vector<std::any> args)
-	{
-		check_context(c);
-		if (args.size() != m_params.size() || m_params.size() != 2) {
-			throw ProgramException("parity_mismatch", "expected 2 arguments but got " + std::to_string(args.size()), location());
-		}
-
-		std::vector<std::any> cleanedArgs;
-		for (unsigned int i{ 0 }; i < m_params.size(); i++) {
-			std::any arg = c->assert_or_convert_type(m_params.at(i).type, args.at(i), location());
-			cleanedArgs.push_back(arg);
-		}
-
-		return m_hFn(c, cleanedArgs.at(0), cleanedArgs.at(1));
-	}
+	std::any call(std::shared_ptr<interpreter> c, std::vector<std::any> args);
 
 
 private:
 	binary_func m_hFn;
 };
 
+
+
+#endif

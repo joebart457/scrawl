@@ -10,9 +10,6 @@
 
 int main(int argc, char** argv)
 {
-
-
-
 	std::shared_ptr<interpreter> i = ContextBuilder().BuildInterpreter();
 	std::shared_ptr<tokenizer> t = ContextBuilder().BuildTokenizer();
 	parser p;

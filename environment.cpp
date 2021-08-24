@@ -80,23 +80,11 @@ void Environment::Delete_NoThrow(std::string szName, const location& loc)
 }
 
 std::shared_ptr<Environment> Environment::Copy() {
-	std::shared_ptr<Environment> e = std::make_shared<Environment>();
+	std::shared_ptr<Environment> e = std::make_shared<Environment>(nullptr);
 	for (auto it = m_values.begin(); it != m_values.end(); it++) {
 
 
 		std::any val = std::any(it->second);
-		if (val.type() == typeid(int)) {
-			val = std::any_cast<int>(val);
-		}
-		if (it->second.type() == typeid(std::shared_ptr<custom_fn>)) {
-			std::shared_ptr<custom_fn> fn = std::any_cast<std::shared_ptr<custom_fn>>(it->second);
-			std::cout << "\n testing custom function closure\n";
-			if (true) {
-				std::cout << "\n repairing custom function closure\n";
-				fn->setEnclosing(e);
-				val = fn;
-			}
-		}
 		e->m_values[it->first] = val;
 	}
 	return e;
@@ -135,7 +123,7 @@ std::string to_string( std::any& rhs)
 		oss << (std::any_cast<std::shared_ptr<native_fn>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<native_fn>>(rhs)->getSignature());
 	}
 	else if (rhs.type() == typeid(std::shared_ptr<binary_fn>)) {
-		oss << (std::any_cast<std::shared_ptr<binary>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<binary_fn>>(rhs)->getSignature());
+		oss << (std::any_cast<std::shared_ptr<binary_fn>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<binary_fn>>(rhs)->getSignature());
 	}
 	else if (rhs.type() == typeid(std::shared_ptr<unary_fn>)) {
 		oss << (std::any_cast<std::shared_ptr<unary_fn>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<unary_fn>>(rhs)->getSignature());

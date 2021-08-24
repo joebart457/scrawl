@@ -104,9 +104,9 @@ interpreter::interpreter(std::shared_ptr<execution_context> context, std::shared
 	:m_context{ context }, m_opHandler{ opHandler }{}
 interpreter::interpreter()
 {
-	activation_record ar;
-	ar.environment = std::make_shared<scope<std::any>>();
-	ar.id = -1;
+	std::shared_ptr<activation_record> ar = std::make_shared<activation_record>();
+	ar->environment = std::make_shared<scope<std::any>>("default_empty");
+	ar->id = -1;
 	m_context = std::make_shared<execution_context>(ar);
 }
 
@@ -143,10 +143,10 @@ void interpreter::acceptStatement(std::shared_ptr<statement> stmt) {
 
 void interpreter::acceptClassDeclaration(std::shared_ptr<class_declaration> class_decl)
 {
-	std::shared_ptr<Environment> env = acceptBlock_KeepEnvironment(class_decl->m_body);
+	std::shared_ptr<activation_record> env = acceptBlock_KeepEnvironment(class_decl->m_body);
 
 	m_context->define(class_decl->m_szName, 
-		klass_definition(class_decl->m_szName, *env.get()),
+		klass_definition(class_decl->m_szName, env),
 		false,
 		class_decl->m_loc);
 }
@@ -154,7 +154,7 @@ void interpreter::acceptClassDeclaration(std::shared_ptr<class_declaration> clas
 void interpreter::acceptFunctionDeclaration(std::shared_ptr<function_declaration> func_decl)
 {
 	m_context->define(func_decl->m_szName, 
-		std::make_shared<custom_fn>(func_decl->m_szName, m_environment, func_decl->m_body->m_statements, func_decl->m_params, func_decl->m_loc), 
+		std::make_shared<custom_fn>(func_decl->m_szName, m_context->current_ar(), func_decl->m_body->m_statements, func_decl->m_params, func_decl->m_loc), 
 		false,
 		func_decl->m_loc);
 }

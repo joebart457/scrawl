@@ -1,31 +1,25 @@
 #pragma once
 
+#ifndef __INCLUDE_CONTEXT_H
+#define __INCLUDE_CONTEXT_H
+
 #include <memory>
 #include <sstream>
 #include <any>
 #include <iostream>
 
 #include "list_crawler.h"
-#include "scope.hpp"
+#include "scope.h"
 #include "location.h"
 #include "exceptions.h"
 #include "callable.h"
+
 
 struct activation_record {
 	unsigned int id{ 0 };
 	std::string szAlias;
 	std::shared_ptr<scope<std::any>> environment;
 };
-
-std::string toString(const activation_record& ar, const std::string& exclude = "")
-{
-	std::ostringstream oss;
-	oss << "<" << ar.szAlias << ":" << ar.id << ">";
-	oss << "\r\n\t" << ar.environment->toString();
-	oss << "\r\n</" << (ar.szAlias.empty() ? ":" + std::to_string(ar.id) : ar.szAlias) << ">";
-	return oss.str();
-}
-
 
 
 
@@ -42,6 +36,7 @@ public:
 		activation_record ar;
 		ar.id = m_index;
 		ar.szAlias = szAlias;
+		ar.environment = std::make_shared<scope<std::any>>(szAlias);
 		push_ar(std::make_shared<activation_record>(ar));
 	}
 
@@ -118,6 +113,7 @@ public:
 		rlist_crawler<std::shared_ptr<activation_record>> crawler(m_records);
 		while (!crawler.end()) {
 			std::shared_ptr<activation_record> ar = crawler.next();
+			if (ar == nullptr) { throw std::exception("test"); }
 			if (ar->environment->define(szKey, value, overwrite)) {
 				return;
 			}
@@ -164,12 +160,25 @@ public:
 
 	std::shared_ptr<activation_record> current_ar()
 	{
-		if (m_records.size() == 0) return nullptr;
+		if (m_records.size() == 0) throw ProgramException("no activation record to execute", location(), Severity().CRITICAL());
 		return m_records.at(m_records.size() - 1);
 	}
 
 private:
+
+	std::string toString(const activation_record& ar, const std::string& exclude = "")
+	{
+		std::ostringstream oss;
+		oss << "<" << ar.szAlias << ":" << ar.id << ">";
+		oss << "\r\n\t" << ar.environment->toString();
+		oss << "\r\n</" << (ar.szAlias.empty() ? ":" + std::to_string(ar.id) : ar.szAlias) << ">";
+		return oss.str();
+	}
+
 	unsigned int m_index{ 0 };
 	std::vector<std::shared_ptr<activation_record>> m_records;
 };
 
+
+
+#endif

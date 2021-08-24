@@ -15,7 +15,6 @@ void check_context(std::shared_ptr<interpreter> i);
 void check_context(std::shared_ptr<interpreter> i, const location& loc);
 void check_context(std::shared_ptr<execution_context> i);
 
-class Environment;
 class OperatorHandler;
 struct activation_record;
 
@@ -58,6 +57,8 @@ public:
 
 	std::any assert_or_convert_type(std::string type, std::any obj, const location& loc);
 
+
+	std::shared_ptr<execution_context> get_context();
 private:
 
 	std::shared_ptr<activation_record> acceptBlock_KeepEnvironment(std::shared_ptr<block> blk);

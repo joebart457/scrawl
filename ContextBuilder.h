@@ -12,7 +12,7 @@
 #include "environment.h"
 #include "OperatorHandler.h"
 #include "Keywords.h"
-
+#include "context.h"
 #include "tokenizer.hpp"
 
 std::any add_int_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs) 
@@ -52,7 +52,10 @@ std::any to_string(std::shared_ptr<interpreter> i, std::any& rhs)
 		oss << (std::any_cast<std::shared_ptr<native_fn>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<native_fn>>(rhs)->getSignature());
 	}
 	else if (rhs.type() == typeid(std::shared_ptr<binary_fn>)) {
-		oss << (std::any_cast<std::shared_ptr<binary>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<binary_fn>>(rhs)->getSignature());
+		oss << (std::any_cast<std::shared_ptr<binary_fn>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<binary_fn>>(rhs)->getSignature());
+	}
+	else if (rhs.type() == typeid(std::shared_ptr<custom_fn>)) {
+		oss << (std::any_cast<std::shared_ptr<custom_fn>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<custom_fn>>(rhs)->getSignature());
 	}
 	else if (rhs.type() == typeid(std::shared_ptr<unary_fn>)) {
 		oss << (std::any_cast<std::shared_ptr<unary_fn>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<unary_fn>>(rhs)->getSignature());
@@ -60,8 +63,6 @@ std::any to_string(std::shared_ptr<interpreter> i, std::any& rhs)
 	else if (rhs.type() == typeid(std::shared_ptr<callable>)) {
 		oss << (std::any_cast<std::shared_ptr<callable>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<callable>>(rhs)->getSignature());
 	}
-
-
 	else {
 		oss << "<object>";
 	}
@@ -79,40 +80,48 @@ std::any print(std::shared_ptr<interpreter> i, std::vector<std::any> args)
 std::any print_environment(std::shared_ptr<interpreter> i, std::vector<std::any> args)
 {
 	check_context(i);
-	std::cout << i->getEnvironment()->toString();
+	i->get_context()->output();
 	return nullptr;
 }
 
 class ContextBuilder
 {
 public:
-	static std::shared_ptr<Environment> BuildEnvironment()
+	static std::shared_ptr<scope<std::any>> BuildDefaultScope()
 	{
-		std::shared_ptr<Environment> e = std::make_shared<Environment>(nullptr);
-		e->Define("to_string", 
+		std::shared_ptr<scope<std::any>> e = std::make_shared<scope<std::any>>("default");
+		e->define("to_string", 
 			std::make_shared<unary_fn>("to_string", to_string)
 				->registerParameter(BuildParameter("")), 
-			location(), false);
+			true);
 
-		e->Define("print", 
+		e->define("print", 
 			std::make_shared<native_fn>("print", print)
 				->registerParameter(BuildParameter("")), 
-			location(), false);
-		e->Define("e",
+			true);
+		e->define("e",
 			std::make_shared<native_fn>("e", print_environment),
-			location(), false);
+			true);
 
-		e->Define("typeof",
+		e->define("typeof",
 			std::make_shared<unary_fn>("typeof", type_of_any)
 			->registerParameter(BuildParameter("")),
-			location(), false);
+			true);
 
 		return e;
 	}
 
 	static std::shared_ptr<interpreter> BuildInterpreter()
 	{
-		return std::make_shared<interpreter>(BuildEnvironment(), BuildOperatorHandler());
+		return std::make_shared<interpreter>(BuildExecutionContext(), BuildOperatorHandler());
+	}
+
+	static std::shared_ptr<execution_context> BuildExecutionContext() 
+	{
+		std::shared_ptr<activation_record> default_ar = std::make_shared<activation_record>();
+		default_ar->id = 0;
+		default_ar->environment = BuildDefaultScope();
+		return std::make_shared<execution_context>(default_ar);
 	}
 
 	static std::shared_ptr<OperatorHandler> BuildOperatorHandler()
@@ -173,7 +182,7 @@ public:
 			tokenizer_rule(Keywords().DOUBLE(), "double", std::make_shared<std::string>(typeid(double).name())),
 			tokenizer_rule(Keywords().CHAR(), "char", std::make_shared<std::string>(typeid(char).name())),
 			tokenizer_rule(Keywords().STRING(), "string", std::make_shared<std::string>(typeid(std::string).name())),
-			tokenizer_rule(Keywords().IGNORE(), "ignore"),
+			tokenizer_rule(Keywords().IGNORE(), "ignore", std::make_shared<std::string>("")),
 			
 			
 			tokenizer_rule(Keywords().NEW(), "new"),
