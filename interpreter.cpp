@@ -146,7 +146,7 @@ void interpreter::acceptClassDeclaration(std::shared_ptr<class_declaration> clas
 	std::shared_ptr<activation_record> env = acceptBlock_KeepEnvironment(class_decl->m_body);
 
 	m_context->define(class_decl->m_szName, 
-		klass_definition(class_decl->m_szName, env),
+		std::make_shared<klass_definition>(class_decl->m_szName, env),
 		false,
 		class_decl->m_loc);
 }
@@ -293,9 +293,9 @@ std::any interpreter::acceptAssignment(std::shared_ptr<assignment> assignmnt)
 			instance.Assign(assignmnt->name, val, assignmnt->m_loc);
 			return val;
 		}
-		if (lhs.type() == typeid(klass_definition)) {// environment
-			klass_definition instance = std::any_cast<klass_definition>(lhs);
-			instance.Assign(assignmnt->name, val, assignmnt->m_loc);
+		if (lhs.type() == typeid(std::shared_ptr<klass_definition>)) {// environment
+			std::shared_ptr<klass_definition> instance = std::any_cast<std::shared_ptr<klass_definition>>(lhs);
+			instance->Assign(assignmnt->name, val, assignmnt->m_loc);
 			return val;
 		}
 		throw ProgramException("invalid assignment target", assignmnt->m_loc);
@@ -321,8 +321,8 @@ std::any interpreter::acceptBinary(std::shared_ptr<binary> expr_binary)
 	std::any rhs = acceptExpression(expr_binary->rhs);
 	std::any lhs = acceptExpression(expr_binary->lhs);
 
-	return m_opHandler->getOperator(createOperatorSignature(expr_binary->op, { rhs, lhs }))
-		->call(std::static_pointer_cast<interpreter>(shared_from_this()), { rhs, lhs });
+	return m_opHandler->getOperator(createOperatorSignature(expr_binary->op, { lhs, rhs }))
+		->call(std::static_pointer_cast<interpreter>(shared_from_this()), { lhs, rhs });
 }
 
 
@@ -357,8 +357,8 @@ std::any interpreter::acceptGet(std::shared_ptr<get> expr_get)
 	if (lhs.type() == typeid(klass_instance)) {
 		return std::any_cast<klass_instance>(lhs).Get(expr_get->identifier, expr_get->m_loc);
 	}
-	if (lhs.type() == typeid(klass_definition)) {
-		return std::any_cast<klass_definition>(lhs).Get(expr_get->identifier, expr_get->m_loc);
+	if (lhs.type() == typeid(std::shared_ptr<klass_definition>)) {
+		return std::any_cast<std::shared_ptr<klass_definition>>(lhs)->Get(expr_get->identifier, expr_get->m_loc);
 	}
 
 	throw ProgramException("Unable to perform get on non-container type", expr_get->m_loc);
@@ -390,11 +390,11 @@ std::any interpreter::acceptInitializer(std::shared_ptr<initializer> expr_intial
 		args.push_back(acceptExpression(arg));
 	}
 	std::any klass = m_context->get(expr_intializer->szTypeName, expr_intializer->m_loc);
-	if (klass.type() != typeid(klass_definition)) {
+	if (klass.type() != typeid(std::shared_ptr<klass_definition>)) {
 		throw ProgramException("expect valid class type in initializer", expr_intializer->m_loc);
 	}
-	klass_definition klass_def = std::any_cast<klass_definition>(klass);
-	klass_instance ki = klass_def.create();
+	std::shared_ptr<klass_definition> klass_def = std::any_cast<std::shared_ptr<klass_definition>>(klass);
+	klass_instance ki = klass_def->create();
 	
 	std::shared_ptr<callable> constructor = getCallable(ki.Get("constructor", expr_intializer->m_loc));
 	constructor->call(std::static_pointer_cast<interpreter>(shared_from_this()), args);
@@ -403,7 +403,7 @@ std::any interpreter::acceptInitializer(std::shared_ptr<initializer> expr_intial
 
 std::any interpreter::acceptListInitializer(std::shared_ptr<list_initializer> expr_list_initializer)
 {
-	throw ProgramException("NotSupportedException", location());
+	throw ProgramException("NotSupportedException", expr_list_initializer->m_loc);
 }
 
 std::any interpreter::assert_or_convert_type(std::string type, std::any obj, const location& loc)

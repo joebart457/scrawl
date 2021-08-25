@@ -90,6 +90,7 @@ public:
 		}
 		if (m_pi.match(Keywords().BREAK())) {
 			token tok = m_pi.previous();
+			m_pi.consume(Keywords().SEMI(), "expect ';' after 'break'");
 			return std::make_shared<break_statement>(tok.loc());
 		}
 		if (m_pi.match(Keywords().LCURLY())) {
@@ -113,6 +114,7 @@ public:
 		}
 		if (m_pi.match(Keywords().BREAK())) {
 			token tok = m_pi.previous();
+			m_pi.consume(Keywords().SEMI(), "expect ';' after 'break'");
 			return std::make_shared<break_statement>(tok.loc());
 		}
 		if (m_pi.match(Keywords().LCURLY())) {

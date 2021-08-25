@@ -1,6 +1,7 @@
 #include "scope.h"
 
 #include "callable.h"
+#include "klass_instance.h"
 
 template<typename T>
 std::ostream& operator<<(std::ostream& out, const std::shared_ptr<T>& ptr) {
@@ -48,6 +49,12 @@ std::ostream& operator<<(std::ostream& out, const std::any& obj) {
 	}
 	else if (obj.type() == typeid(std::shared_ptr<callable>)) {
 		out << (std::any_cast<std::shared_ptr<callable>>(obj) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<callable>>(obj)->getSignature());
+	}
+	else if (obj.type() == typeid(std::shared_ptr<klass_definition>)) {
+		out << (std::any_cast<std::shared_ptr<klass_definition>>(obj) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<klass_definition>>(obj)->getSignature());
+	}
+	else if (obj.type() == typeid(klass_instance)) {
+		out << std::any_cast<klass_instance>(obj).getSignature();
 	}
 	else {
 		out << "<object>";

@@ -42,6 +42,12 @@ public:
 
 	void push_ar(std::shared_ptr<activation_record> ar)
 	{
+		if (ar == nullptr) {
+			ar = std::make_shared<activation_record>();
+			ar->id = m_index;
+			ar->environment = std::make_shared<scope<std::any>>("");
+		}
+
 		m_records.push_back(ar);
 		m_index++;
 	}
@@ -80,6 +86,16 @@ public:
 		}
 		throw ProgramException("unable to retrieve value with key '" + szKey + "'", loc);
 	}
+	
+	template <typename Ty>
+	Ty get(const std::string& szKey)
+	{
+		std::any obj = get(szKey, location());
+		if (obj.type() != typeid(Ty)) {
+			throw ProgramException("type mismatch in assertion type " + std::string(obj.type().name()) + " != " + std::string(typeid(Ty).name()), location());
+		}
+		return std::any_cast<Ty>(obj);
+	}
 
 	std::shared_ptr<callable> get_callable(const std::string& szKey, const location& loc)
 	{
@@ -113,7 +129,6 @@ public:
 		rlist_crawler<std::shared_ptr<activation_record>> crawler(m_records);
 		while (!crawler.end()) {
 			std::shared_ptr<activation_record> ar = crawler.next();
-			if (ar == nullptr) { throw std::exception("test"); }
 			if (ar->environment->define(szKey, value, overwrite)) {
 				return;
 			}

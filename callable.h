@@ -21,11 +21,10 @@ class callable :
 public:
 	callable(std::string szName)
 		:m_szName{ szName }{}
+	callable(std::string szName, std::vector<param> params)
+		:m_szName{ szName }, m_params{ params } {}
 
 	virtual std::any call(std::shared_ptr<interpreter> c, ::std::vector<std::any> arguments) = 0;
-
-
-	virtual std::shared_ptr<callable> registerParameter(const param& p);
 
 	virtual std::string getSignature();
 
@@ -40,15 +39,23 @@ typedef std::any(*func)(std::shared_ptr<interpreter>, std::vector<std::any>);
 class native_fn :
 	public callable {
 public:
-	native_fn(std::string szName, func fn)
-		:callable(szName), m_hFn{ fn } {}
+	native_fn(std::string szName, func fn, std::shared_ptr<activation_record> enclosing = nullptr)
+		:callable(szName), m_hFn{ fn }, m_enclosing{ enclosing } {}
+	native_fn(native_fn& fn)
+		:callable(fn.m_szName, fn.m_params), m_hFn{ fn.m_hFn }, m_enclosing{ fn.m_enclosing }, m_variadic{ fn.m_variadic } {}
 	~native_fn() {}
 
 	std::any call(std::shared_ptr<interpreter> c, std::vector<std::any> args);
 
+	void setEnclosing(std::shared_ptr<activation_record> ar);
+	std::shared_ptr<native_fn> setVariadic();
+
+	std::shared_ptr<native_fn> registerParameter(const param& p);
 
 private:
 	func m_hFn;
+	std::shared_ptr<activation_record> m_enclosing{ nullptr };
+	bool m_variadic{ false };
 };
 
 
@@ -109,6 +116,7 @@ public:
 
 	std::any call(std::shared_ptr<interpreter> c, std::vector<std::any> args);
 
+	std::shared_ptr<binary_fn> registerParameter(const param& p);
 
 private:
 	binary_func m_hFn;

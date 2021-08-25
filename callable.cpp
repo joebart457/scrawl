@@ -9,12 +9,6 @@
 #include "exceptions.h"
 
 
-std::shared_ptr<callable> callable::registerParameter(const param& p)
-{
-	m_params.push_back(p);
-	return shared_from_this();
-}
-
 std::string callable::getSignature()
 {
 	std::ostringstream oss;
@@ -36,20 +30,66 @@ std::string callable::getSignature()
 std::any native_fn::call(std::shared_ptr<interpreter> c, std::vector<std::any> args)
 {
 	check_context(c);
-	if (args.size() != m_params.size()) {
-		throw ProgramException("parity_mismatch", "expected " + std::to_string(m_params.size())
-			+ " arguments but got " + std::to_string(args.size()), location());
+	std::shared_ptr<execution_context> context = c->get_context();
+	check_context(context);
+	
+	std::any ret = nullptr;
+	context->push_ar(m_enclosing);
+
+	try {
+		std::vector<std::any> cleanedArgs;
+		if (!m_variadic) {
+			if (args.size() != m_params.size()) {
+				throw ProgramException("parity_mismatch", "expected " + std::to_string(m_params.size())
+					+ " arguments but got " + std::to_string(args.size()), location());
+			}
+
+			for (unsigned int i{ 0 }; i < m_params.size(); i++) {
+				std::any arg = c->assert_or_convert_type(m_params.at(i).type, args.at(i), location());
+				cleanedArgs.push_back(arg);
+			}
+		}
+		else {
+			cleanedArgs = args;
+		}
+
+		ret = m_hFn(c, cleanedArgs);
+	}
+	catch (ReturnException ret) {
+		// Reset environment
+		context->pop_ar();
+		
+		throw ret;
+	}
+	catch (ProgramException pe) {
+		// Reset environment
+		context->pop_ar();
+
+		// throw error
+		throw pe;
 	}
 
-	std::vector<::std::any> cleanedArgs;
-	for (unsigned int i{ 0 }; i < m_params.size(); i++) {
-		std::any arg = c->assert_or_convert_type(m_params.at(i).type, args.at(i), location());
-		cleanedArgs.push_back(arg);
-	}
+	context->pop_ar();
+	return ret;
 
-	return m_hFn(c, cleanedArgs);
 }
 
+void native_fn::setEnclosing(std::shared_ptr<activation_record> ar)
+{
+	m_enclosing = ar;
+}
+
+std::shared_ptr<native_fn> native_fn::setVariadic()
+{
+	m_variadic = true;
+	return std::static_pointer_cast<native_fn>(shared_from_this());
+}
+
+std::shared_ptr<native_fn> native_fn::registerParameter(const param& p)
+{
+	m_params.push_back(p);
+	return std::static_pointer_cast<native_fn>(shared_from_this());
+}
 
 std::any custom_fn::call(std::shared_ptr<interpreter> c, std::vector<std::any> arguments)
 {
@@ -154,4 +194,11 @@ std::any binary_fn::call(std::shared_ptr<interpreter> c, std::vector<std::any> a
 	}
 
 	return m_hFn(c, cleanedArgs.at(0), cleanedArgs.at(1));
+}
+
+
+std::shared_ptr<binary_fn> binary_fn::registerParameter(const param& p)
+{
+	m_params.push_back(p);
+	return std::static_pointer_cast<binary_fn>(shared_from_this());
 }

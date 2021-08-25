@@ -14,10 +14,51 @@
 #include "Keywords.h"
 #include "context.h"
 #include "tokenizer.hpp"
+#include "klass_instance.h"
+
+
+// List methods
+std::any list_push(std::shared_ptr<interpreter> i, std::vector<std::any> args)
+{
+	check_context(i);
+	std::shared_ptr<execution_context> context = i->get_context();
+	check_context(context);
+
+	i->get_context()->output();
+
+	unsigned long size = context->get<unsigned long>("size");
+	context->define(std::to_string(size), args.at(0), false, location());
+	context->assign("size", ((unsigned long)size + 1), location());
+
+	return nullptr;
+}
+
+
+std::any list_constructor(std::shared_ptr<interpreter> i, std::vector<std::any> args)
+{
+	check_context(i);
+	std::shared_ptr<execution_context> context = i->get_context();
+	check_context(context);
+
+	for (unsigned int i{ 0 }; i < args.size(); i++) {
+		context->define(std::to_string(i), args.at(i), false, location());
+	}
+	context->assign("size", (unsigned long)args.size(), location());
+
+	return nullptr;
+}
+
+
 
 std::any add_int_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs) 
 {
 	return std::any_cast<int>(lhs) + std::any_cast<int>(rhs);
+}
+
+
+std::any less_than_int_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return std::any_cast<int>(lhs) < std::any_cast<int>(rhs);
 }
 
 
@@ -108,6 +149,26 @@ public:
 			->registerParameter(BuildParameter("")),
 			true);
 
+
+		std::shared_ptr<activation_record> list_env_ar = std::make_shared<activation_record>();
+		list_env_ar->szAlias = "list";
+		list_env_ar->environment = std::make_shared<scope<std::any>>();
+		list_env_ar->environment->define("push",
+			std::make_shared<native_fn>("push", list_push, list_env_ar)->registerParameter(BuildParameter("")));
+
+		list_env_ar->environment->define("constructor",
+			std::make_shared<native_fn>("constructor", list_constructor, list_env_ar)->setVariadic());
+
+		list_env_ar->environment->define("size",
+			(unsigned long)0);
+
+		list_env_ar->environment->define("x",
+			1);
+
+		e->define("list",
+			std::make_shared<klass_definition>("list", list_env_ar),
+			true);
+
 		return e;
 	}
 
@@ -129,6 +190,12 @@ public:
 		std::shared_ptr<OperatorHandler> opHandler = std::make_shared<OperatorHandler>();
 		opHandler->registerOperator(
 			std::make_shared<binary_fn>("+", add_int_int)
+			->registerParameter(BuildParameter<int>())
+			->registerParameter(BuildParameter<int>())
+		);
+
+		opHandler->registerOperator(
+			std::make_shared<binary_fn>("<", less_than_int_int)
 			->registerParameter(BuildParameter<int>())
 			->registerParameter(BuildParameter<int>())
 		);
@@ -174,6 +241,8 @@ public:
 			tokenizer_rule(Keywords().TRUE(), "true"),
 			tokenizer_rule(Keywords().FALSE(), "false"),
 			tokenizer_rule(Keywords().NUL(), "null"),
+			tokenizer_rule(Keywords().BREAK(), "break"),
+
 
 			/* types */
 			tokenizer_rule(Keywords().UINT(), "uint", std::make_shared<std::string>(typeid(unsigned long).name())),

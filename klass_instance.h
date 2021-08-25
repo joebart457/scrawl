@@ -10,8 +10,8 @@
 
 class klass_instance {
 public:
-	klass_instance(std::shared_ptr<activation_record> ar)
-		:m_ar{ ar }{}
+	klass_instance(const std::string& signature, std::shared_ptr<activation_record> ar)
+		:m_szSignature{ signature }, m_ar{ ar } {}
 	~klass_instance() {}
 
 	void Define(std::string szName, std::any value, const location& loc, bool overwrite) {
@@ -29,12 +29,18 @@ public:
 	std::any Get(std::string szName, const location& loc) {
 		std::any out;
 		if (!m_ar->environment->get(szName, out)) {
-			throw ProgramException("unable to get value from key" + szName, loc);
+			throw ProgramException("unable to get value from key " + szName, loc);
 		}
 		return out;
 	}
 
+	std::string getSignature()
+	{
+		return m_szSignature;
+	}
+
 private:
+	std::string m_szSignature{ "class_instance" };
 	std::shared_ptr<activation_record> m_ar;
 };
 
@@ -46,9 +52,12 @@ public:
 
 	klass_instance create()
 	{
+
+		std::string alias = m_szName + "_instance_" + std::to_string(m_refIndex);
 		std::shared_ptr<activation_record> ar = std::make_shared<activation_record>();
 		ar->environment = m_ar->environment->copy();
-		ar->szAlias = m_szName + "_instance_" + std::to_string(m_refIndex++);
+		ar->szAlias = alias;
+		m_refIndex = m_refIndex + 1;
 		auto m = ar->environment->lookup();
 		for (auto it = m->begin(); it != m->end(); it++) {
 			if (it->second.type() == typeid(std::shared_ptr<custom_fn>)) {
@@ -56,9 +65,15 @@ public:
 				fn = std::make_shared<custom_fn>(*fn.get());
 				fn->setEnclosing(ar);
 				ar->environment->define(it->first, fn, true);
+			} 
+			else if (it->second.type() == typeid(std::shared_ptr<native_fn>)) {
+				std::shared_ptr<native_fn> fn = std::any_cast<std::shared_ptr<native_fn>>(it->second);
+				fn = std::make_shared<native_fn>(*fn.get());
+				fn->setEnclosing(ar);
+				ar->environment->define(it->first, fn, true);
 			}
 		}
-		return klass_instance(ar);
+		return klass_instance(alias, ar);
 	}
 
 	void Define(std::string szName, std::any value, const location& loc, bool overwrite) {
@@ -76,11 +91,15 @@ public:
 	std::any Get(std::string szName, const location& loc) {
 		std::any out;
 		if (!m_ar->environment->get(szName, out)) {
-			throw ProgramException("unable to get value from key" + szName, loc);
+			throw ProgramException("unable to get value from key " + szName, loc);
 		}
 		return out;
 	}
 
+	std::string getSignature()
+	{
+		return "class " + m_szName + " :r" + std::to_string(m_refIndex);
+	}
 private:
 
 	unsigned int m_refIndex{ 0 };
