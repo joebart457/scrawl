@@ -55,7 +55,7 @@ public:
 	std::any acceptInitializer(std::shared_ptr<initializer> expr_intializer);
 	std::any acceptListInitializer(std::shared_ptr<list_initializer> expr_list_initializer);
 
-	std::any assert_or_convert_type(std::string type, std::any obj, const location& loc);
+	std::any assert_or_convert_type(const param& p, std::any obj, const location& loc);
 
 
 	std::shared_ptr<execution_context> get_context();

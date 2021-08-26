@@ -153,6 +153,11 @@ public:
 		}
 	}
 
+	bool peekMatch(unsigned int offset, const std::string& type)
+	{
+		if (m_nIndex + offset >= m_tokens.size()) return false;
+		return m_tokens.at(m_nIndex + offset).type() == type;
+	}
 
 	bool exists(int look)
 	{

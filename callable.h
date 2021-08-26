@@ -42,13 +42,14 @@ public:
 	native_fn(std::string szName, func fn, std::shared_ptr<activation_record> enclosing = nullptr)
 		:callable(szName), m_hFn{ fn }, m_enclosing{ enclosing } {}
 	native_fn(native_fn& fn)
-		:callable(fn.m_szName, fn.m_params), m_hFn{ fn.m_hFn }, m_enclosing{ fn.m_enclosing }, m_variadic{ fn.m_variadic } {}
+		:callable(fn.m_szName, fn.m_params), m_hFn{ fn.m_hFn }, m_enclosing{ fn.m_enclosing }, m_variadic{ fn.m_variadic }, m_variadic_after{ fn.m_variadic_after } {}
 	~native_fn() {}
 
 	std::any call(std::shared_ptr<interpreter> c, std::vector<std::any> args);
 
 	void setEnclosing(std::shared_ptr<activation_record> ar);
 	std::shared_ptr<native_fn> setVariadic();
+	std::shared_ptr<native_fn> setVariadicAfter(unsigned int index);
 
 	std::shared_ptr<native_fn> registerParameter(const param& p);
 
@@ -56,6 +57,7 @@ private:
 	func m_hFn;
 	std::shared_ptr<activation_record> m_enclosing{ nullptr };
 	bool m_variadic{ false };
+	unsigned int m_variadic_after{ 0 };
 };
 
 
@@ -63,9 +65,9 @@ class custom_fn :
 	public callable {
 public:
 	custom_fn(std::string szName, std::shared_ptr<activation_record> ar, std::vector<std::shared_ptr<statement>> body, std::vector<param> parameters, const location& loc)
-		:callable{ szName }, m_enclosing{ ar }, m_body{ body }, m_parameters{ parameters }, m_loc{ loc } {}
+		:callable{ szName, parameters }, m_enclosing{ ar }, m_body{ body }, m_loc{ loc } {}
 	custom_fn(custom_fn& fn)
-		:callable{ fn.m_szName }, m_enclosing{ fn.m_enclosing }, m_body{ fn.m_body }, m_parameters{ fn.m_parameters }, m_loc{ fn.m_loc }{}
+		:callable{ fn.m_szName, fn.m_params }, m_enclosing{ fn.m_enclosing }, m_body{ fn.m_body }, m_loc{ fn.m_loc }{}
 
 	~custom_fn() {}
 
@@ -75,7 +77,6 @@ public:
 private:
 	std::shared_ptr<activation_record> m_enclosing;
 	std::vector<std::shared_ptr<statement>> m_body;
-	std::vector<param> m_parameters;
 	location m_loc;
 };
 

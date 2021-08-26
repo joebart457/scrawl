@@ -15,11 +15,11 @@ std::string callable::getSignature()
 	oss << m_szName << "(";
 
 	if (m_params.size() >= 1) {
-		oss << m_params.at(0).type;
+		oss << (m_params.at(0).class_specifier.size() > 0? m_params.at(0).class_specifier : m_params.at(0).type);
 	}
 
 	for (unsigned int i{ 1 }; i < m_params.size(); i++) {
-		oss << "," << m_params.at(i).type;
+		oss << "," << (m_params.at(i).class_specifier.size() > 0? m_params.at(i).class_specifier : m_params.at(i).type);
 	}
 	oss << ")";
 	return oss.str();
@@ -45,12 +45,27 @@ std::any native_fn::call(std::shared_ptr<interpreter> c, std::vector<std::any> a
 			}
 
 			for (unsigned int i{ 0 }; i < m_params.size(); i++) {
-				std::any arg = c->assert_or_convert_type(m_params.at(i).type, args.at(i), location());
+				std::any arg = c->assert_or_convert_type(m_params.at(i), args.at(i), location());
 				cleanedArgs.push_back(arg);
 			}
 		}
 		else {
-			cleanedArgs = args;
+
+			if (args.size() < m_variadic_after) {
+				throw ProgramException("parity_mismatch", "expected at least " + std::to_string(m_params.size())
+					+ " arguments but got " + std::to_string(args.size()), location());
+			}
+
+			unsigned int i{ 0 };
+			for (i; i < m_variadic_after; i++) {
+				std::any arg = c->assert_or_convert_type(m_params.at(i), args.at(i), location());
+				cleanedArgs.push_back(arg);
+			}
+
+			for (unsigned int j{ i }; j < args.size(); j++) {
+				cleanedArgs.push_back(args.at(j));
+			}
+
 		}
 
 		ret = m_hFn(c, cleanedArgs);
@@ -85,6 +100,14 @@ std::shared_ptr<native_fn> native_fn::setVariadic()
 	return std::static_pointer_cast<native_fn>(shared_from_this());
 }
 
+std::shared_ptr<native_fn> native_fn::setVariadicAfter(unsigned int index)
+{
+	if (!m_variadic) throw ProgramException("cannot set variadic index of non-variadic function", location(), Severity().FATAL());
+	if (index > m_params.size()) throw ProgramException("variadic index must be less than parameter size", location(), Severity().FATAL());
+	m_variadic_after = index;
+	return std::static_pointer_cast<native_fn>(shared_from_this());
+}
+
 std::shared_ptr<native_fn> native_fn::registerParameter(const param& p)
 {
 	m_params.push_back(p);
@@ -104,15 +127,15 @@ std::any custom_fn::call(std::shared_ptr<interpreter> c, std::vector<std::any> a
 	try {
 
 		// Check parity
-		if (arguments.size() != m_parameters.size()) {
-			throw ProgramException("parity_mismatch", "expected " + std::to_string(m_parameters.size())
+		if (arguments.size() != m_params.size()) {
+			throw ProgramException("parity_mismatch", "expected " + std::to_string(m_params.size())
 				+ " arguments but got " + std::to_string(arguments.size()), m_loc);
 		}
 
 		// Clean arguments and define parameters in this scope
-		for (unsigned int i{ 0 }; i < m_parameters.size(); i++) {
-			std::any cleanedObject = c->assert_or_convert_type(m_parameters.at(i).type, arguments.at(i), m_loc);
-			context->define(m_parameters.at(i).name, cleanedObject, false, m_loc);
+		for (unsigned int i{ 0 }; i < m_params.size(); i++) {
+			std::any cleanedObject = c->assert_or_convert_type(m_params.at(i), arguments.at(i), m_loc);
+			context->define(m_params.at(i).name, cleanedObject, false, m_loc);
 		}
 
 		// Execute function body
@@ -160,7 +183,7 @@ std::any unary_fn::call(std::shared_ptr<interpreter> c, std::vector<std::any> ar
 	}
 
 
-	std::any cleanedArg = c->assert_or_convert_type(m_param.type, args.at(0), location());
+	std::any cleanedArg = c->assert_or_convert_type(m_param, args.at(0), location());
 
 	return m_hFn(c, cleanedArg);
 }
@@ -189,7 +212,7 @@ std::any binary_fn::call(std::shared_ptr<interpreter> c, std::vector<std::any> a
 
 	std::vector<std::any> cleanedArgs;
 	for (unsigned int i{ 0 }; i < m_params.size(); i++) {
-		std::any arg = c->assert_or_convert_type(m_params.at(i).type, args.at(i), location());
+		std::any arg = c->assert_or_convert_type(m_params.at(i), args.at(i), location());
 		cleanedArgs.push_back(arg);
 	}
 

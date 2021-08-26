@@ -50,8 +50,8 @@ public:
 			return parse_class_declaration();
 		}
 
-		if (match_builtin()) {
-			return parse_variable_declaration(m_pi.previous());
+		if (match_variable_declaration()) {
+			return parse_variable_declaration();
 		}
 
 		throw ParsingException("unrecognized token in toplevel: " + m_pi.current().toStr() + "; expect declaration only in toplevel",  m_pi.current().loc());
@@ -75,8 +75,8 @@ public:
 			return parse_class_declaration();
 		}
 
-		if (match_builtin()) {
-			return parse_variable_declaration(m_pi.previous());
+		if (match_variable_declaration()) {
+			return parse_variable_declaration();
 		}
 
 		if (m_pi.match(Keywords().IF())) {
@@ -125,8 +125,8 @@ public:
 			return parse_function_declaration();
 		}
 
-		if (match_builtin()) {
-			return parse_variable_declaration(m_pi.previous());
+		if (match_variable_declaration()) {
+			return parse_variable_declaration();
 		}
 
 		return parse_expression_stmt();
@@ -140,9 +140,15 @@ public:
 		std::vector<param> parameters;
 		if (!m_pi.match(Keywords().RPAREN())) {
 			do {
-				if (match_builtin()) {
+				if (match_variable_declaration()) {
 					param p;
-					p.type = m_pi.previous().type();
+					if (match_builtin()) {
+						p.type = m_pi.previous().lexeme();
+					}
+					else {
+						p.type = m_pi.consume(TOKEN_TYPE_WORD, "expect type specifier in parameter").lexeme();
+						p.class_specifier = p.type;
+					}
 					p.name = m_pi.consume(TOKEN_TYPE_WORD, "expect variable name in parameter").lexeme();
 					if (m_pi.match(Keywords().EQUAL())) {
 						p.default_value = parse_expression();
@@ -182,15 +188,22 @@ public:
 	}
 
 
-	std::shared_ptr<variable_declaration> parse_variable_declaration(token type)
+	std::shared_ptr<variable_declaration> parse_variable_declaration()
 	{
+		std::string type;
+		if (match_builtin()) {
+			type = m_pi.previous().lexeme();
+		}
+		else {
+			type = m_pi.consume(TOKEN_TYPE_WORD, "expect type specifier in declaration").lexeme();
+		}
 		token name = m_pi.consume(TOKEN_TYPE_WORD, "expect variable name in declaration");
 		std::shared_ptr<expression> expr = nullptr;
 		if (m_pi.match(Keywords().EQUAL())) {
 			expr = parse_expression();
 		}
 		m_pi.consume(Keywords().SEMI(), "expect ';' at end of statement");
-		return std::make_shared<variable_declaration>(type.lexeme(), name.lexeme(), expr, type.loc());
+		return std::make_shared<variable_declaration>(type, name.lexeme(), expr, name.loc());
 	}
 
 	std::shared_ptr<if_statement> parse_if()
@@ -367,14 +380,7 @@ public:
 			}
 			else if (m_pi.match(Keywords().CAST())) {
 				std::string op = m_pi.previous().lexeme();
-				token type;
-				if (match_builtin()) {
-					type = m_pi.previous();
-				}
-				else {
-					type = m_pi.consume(TOKEN_TYPE_WORD, "expected syntax: <expr>::<typename> for cast");
-				}
-
+				token type = m_pi.consume(TOKEN_TYPE_WORD, "expected syntax: <expr>::<typename> for cast");
 				expr = std::make_shared<cast>(expr, op, type.lexeme(), type.loc());
 			}
 			else if (m_pi.match(Keywords().LBRACKET())) {
@@ -508,7 +514,6 @@ public:
 		}
 
 		throw ParsingException("unexpected token in primary \"" + m_pi.current().toStr() + "\"", m_pi.current().loc());
-
 	}
 
 private:
@@ -520,15 +525,31 @@ private:
 		return false;
 	}
 
-	std::vector<std::string> builtin_typenames = {
+	bool match_builtin(const std::string& type) {
+		for (unsigned int i{ 0 }; i < builtin_typenames.size(); i++) {
+			if (type == builtin_typenames.at(i)) return true;
+		}
+		return false;
+	}
+
+	const std::vector<std::string> builtin_typenames {
 		Keywords().UINT(),
 		Keywords().INT(),
 		Keywords().FLOAT(),
 		Keywords().DOUBLE(),
 		Keywords().CHAR(),
-		Keywords().STRING(),
-		Keywords().IGNORE(),
+		Keywords().STRING()
 	};
+
+	bool match_variable_declaration() {
+		if (m_pi.current().type() == TOKEN_TYPE_WORD || match_builtin(m_pi.current().type())) {
+			if (m_pi.peekMatch(1, TOKEN_TYPE_WORD)) {
+				return true;
+			}
+			return false;
+		}
+		return false;
+	}
 
 	parser_interface m_pi;
 };

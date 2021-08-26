@@ -33,6 +33,7 @@ struct param
 {
 	std::string name;
 	std::string type;
+	std::string class_specifier;
 	std::shared_ptr<expression> default_value{ nullptr };
 };
 

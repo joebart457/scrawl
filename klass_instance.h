@@ -10,9 +10,13 @@
 
 class klass_instance {
 public:
-	klass_instance(const std::string& signature, std::shared_ptr<activation_record> ar)
-		:m_szSignature{ signature }, m_ar{ ar } {}
+	klass_instance(const std::string& type, const std::string& signature, std::shared_ptr<activation_record> ar)
+		:m_szType{ type }, m_szSignature{ signature }, m_ar{ ar } {}
 	~klass_instance() {}
+
+	bool Exists(const std::string& szName) {
+		return m_ar->environment->exists_local(szName);
+	}
 
 	void Define(std::string szName, std::any value, const location& loc, bool overwrite) {
 		if (!m_ar->environment->define(szName, value, overwrite)) {
@@ -39,8 +43,19 @@ public:
 		return m_szSignature;
 	}
 
+	std::string getType()
+	{
+		return m_szType;
+	}
+
+	std::string toString()
+	{
+		return m_ar->environment->toString();
+	}
+
 private:
-	std::string m_szSignature{ "class_instance" };
+	std::string m_szSignature{ "class_instance_0" };
+	std::string m_szType{ "class_instance" };
 	std::shared_ptr<activation_record> m_ar;
 };
 
@@ -73,7 +88,11 @@ public:
 				ar->environment->define(it->first, fn, true);
 			}
 		}
-		return klass_instance(alias, ar);
+		return klass_instance(m_szName, alias, ar);
+	}
+
+	bool Exists(const std::string& szName) {
+		return m_ar->environment->exists_local(szName);
 	}
 
 	void Define(std::string szName, std::any value, const location& loc, bool overwrite) {
@@ -96,10 +115,16 @@ public:
 		return out;
 	}
 
+	std::string toString()
+	{
+		return m_ar->environment->toString();
+	}
+
 	std::string getSignature()
 	{
 		return "class " + m_szName + " :r" + std::to_string(m_refIndex);
 	}
+
 private:
 
 	unsigned int m_refIndex{ 0 };

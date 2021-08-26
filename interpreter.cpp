@@ -45,10 +45,18 @@ std::string createOperatorSignature(std::string szName, std::vector<std::any> ar
 	std::ostringstream oss;
 	oss << szName << "(";
 	if (args.size() > 0) {
-		oss << args.at(0).type().name();
+		std::string type_name = args.at(0).type().name();
+		if (args.at(0).type() == typeid(klass_instance)) {
+			type_name = std::any_cast<klass_instance>(args.at(0)).getType();
+		}
+		oss << type_name;
 	}
 	for (unsigned int i{ 1 }; i < args.size(); i++) {
-		oss << "," << args.at(i).type().name();
+		std::string type_name = args.at(i).type().name();
+		if (args.at(i).type() == typeid(klass_instance)) {
+			type_name = std::any_cast<klass_instance>(args.at(i)).getType();
+		}
+		oss << "," << type_name;
 	}
 	oss << ")";
 	return oss.str();
@@ -164,7 +172,11 @@ void interpreter::acceptVariableDeclaration(std::shared_ptr<variable_declaration
 {
 	if (var_decl->m_value != nullptr) {
 		std::any val = acceptExpression(var_decl->m_value);
-		if (var_decl->m_szTypename != "" && val.type().name() != var_decl->m_szTypename) {
+		std::string type = val.type().name();
+		if (val.type() == typeid(klass_instance)) {
+			type = std::any_cast<klass_instance>(val).getType();
+		}
+		if (var_decl->m_szTypename != "" && type != var_decl->m_szTypename) {
 			throw ProgramException("type mismatch in variable declaration: " + std::string(val.type().name()) + " != " + var_decl->m_szTypename, var_decl->m_loc);
 		}
 		m_context->define(var_decl->m_szName, val, false, var_decl->m_loc);
@@ -346,6 +358,7 @@ std::any interpreter::acceptCall(std::shared_ptr<call> expr_call)
 	std::any callee = acceptExpression(expr_call->lhs);
 	
 	std::shared_ptr<callable> callee_internal = getCallable(callee);
+
 	return callee_internal->call(std::static_pointer_cast<interpreter>(shared_from_this()), arguments);
 }
 
@@ -406,10 +419,25 @@ std::any interpreter::acceptListInitializer(std::shared_ptr<list_initializer> ex
 	throw ProgramException("NotSupportedException", expr_list_initializer->m_loc);
 }
 
-std::any interpreter::assert_or_convert_type(std::string type, std::any obj, const location& loc)
+std::any interpreter::assert_or_convert_type(const param& p, std::any obj, const location& loc)
 {
-	if (type != "" && obj.type().name() != type) {
-		throw ProgramException("Type mismatch " + std::string(obj.type().name()) + " != " + type, loc, Severity().MEDIUM());
+	if (p.type == "") {
+		return obj;
 	}
-	return obj;
+	if (p.class_specifier != "") {
+		if (obj.type() == typeid(klass_instance)) {
+			if (std::any_cast<klass_instance>(obj).getType() != p.class_specifier) {
+				throw ProgramException("Type mismatch klass_instance::" + std::any_cast<klass_instance>(obj).getType() + " != " + p.type + "::" + p.class_specifier, loc, Severity().MEDIUM());
+			}
+			return obj;
+		}
+		throw ProgramException("Type mismatch " + std::string(obj.type().name()) + " != " + p.type + "::" + p.class_specifier, loc, Severity().MEDIUM());
+	}
+	else {
+		if (obj.type().name() != p.type) {
+			throw ProgramException("Type mismatch " + std::string(obj.type().name()) + " != " + p.type, loc, Severity().MEDIUM());
+		}
+		return obj;
+	}
+	
 }
