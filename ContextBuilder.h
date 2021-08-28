@@ -17,64 +17,79 @@
 #include "tokenizer.hpp"
 #include "klass_instance.h"
 
-// Query Methods
 
-std::any db_open(std::shared_ptr<interpreter> i, std::vector<std::any> args)
+#include "db_framework.h"
+
+
+// DB Methods
+std::any db_table_create(std::shared_ptr<interpreter> i, _args args)
 {
-	check_context(i);
-	std::shared_ptr<execution_context> context = i->get_context();
-	check_context(context);
+	db_table table("company", {
+		db_column("id", SQLITE_INTEGER)
+			.PRIMARY_KEY()
+			.NOT_NULL()
+			.AUTOINCREMENT(),
+		db_column("name")
+			.NOT_NULL(),
+		db_column("country_id", SQLITE_INTEGER)
+			.FOREIGN_KEY("country(id)"),
+		db_column("random_column").UNIQUE()
+		});
+	return table.get_creation_query();
+}
+
+
+std::any db_open(std::shared_ptr<interpreter> i, _args args)
+{
+	std::shared_ptr<execution_context> context = fetch_context(i);
+
 	std::shared_ptr<db_helper> db = context->get<std::shared_ptr<db_helper>>("db");
-	db->open(std::any_cast<std::string>(args.at(0)));
+	db->open(args.get<std::string>(0));
 	return nullptr;
 }
 
 
-std::any db_get(std::shared_ptr<interpreter> i, std::vector<std::any> args)
+std::any db_get(std::shared_ptr<interpreter> i, _args args)
 {
-	check_context(i);
-	std::shared_ptr<execution_context> context = i->get_context();
-	check_context(context);
+	std::shared_ptr<execution_context> context = fetch_context(i);
+
 	std::shared_ptr<db_helper> db = context->get<std::shared_ptr<db_helper>>("db");
 
-	std::vector<std::any> results = db->get(std::any_cast<std::string>(args.at(0)));
+	std::vector<std::any> results = db->get(args.get<std::string>(0));
 
 	std::shared_ptr<klass_definition> ls = context->get<std::shared_ptr<klass_definition>>("list");
 	klass_instance results_container = ls->create();
-	std::any_cast<std::shared_ptr<native_fn>>(results_container.Get("constructor", location()))->call(i, results);
+	std::any_cast<std::shared_ptr<native_fn>>(results_container.Get("constructor", location()))->call(i, _args(results));
 	return results_container;
 }
 
 
-std::any db_run_prepared_query(std::shared_ptr<interpreter> i, std::vector<std::any> args)
+std::any db_run_prepared_query(std::shared_ptr<interpreter> i, _args args)
 {
-	check_context(i);
-	std::shared_ptr<execution_context> context = i->get_context();
-	check_context(context);
+	std::shared_ptr<execution_context> context = fetch_context(i);
+
 	std::shared_ptr<db_helper> db = context->get<std::shared_ptr<db_helper>>("db");
 	
 	std::vector<std::any> results = db->run_prepared(
 		std::any_cast<std::string>(args.at(0)),
-		std::vector<std::any>(args.begin() + 2, args.end()), 
-		std::any_cast<std::shared_ptr<klass_definition>>(args.at(1)), 
+		args.subset(2, 0), 
+		args.get<std::shared_ptr<klass_definition>>(1),
 		false);
 
 	std::shared_ptr<klass_definition> ls = context->get<std::shared_ptr<klass_definition>>("list");
 	klass_instance results_container = ls->create();
-	std::any_cast<std::shared_ptr<native_fn>>(results_container.Get("constructor", location()))->call(i, results);
+	std::any_cast<std::shared_ptr<native_fn>>(results_container.Get("constructor", location()))->call(i, _args(results));
 	return results_container;
 }
 
-// List methods
-std::any list_push(std::shared_ptr<interpreter> i, std::vector<std::any> args)
-{
-	check_context(i);
-	std::shared_ptr<execution_context> context = i->get_context();
-	check_context(context);
 
-	i->get_context()->output();
+// List methods
+std::any list_push(std::shared_ptr<interpreter> i, _args args)
+{
+	std::shared_ptr<execution_context> context = fetch_context(i);
 
 	unsigned long size = context->get<unsigned long>("size");
+
 	context->define(std::to_string(size), args.at(0), false, location());
 	context->assign("size", ((unsigned long)size + 1), location());
 
@@ -82,11 +97,9 @@ std::any list_push(std::shared_ptr<interpreter> i, std::vector<std::any> args)
 }
 
 
-std::any list_constructor(std::shared_ptr<interpreter> i, std::vector<std::any> args)
+std::any list_constructor(std::shared_ptr<interpreter> i, _args args)
 {
-	check_context(i);
-	std::shared_ptr<execution_context> context = i->get_context();
-	check_context(context);
+	std::shared_ptr<execution_context> context = fetch_context(i);
 
 	for (unsigned int i{ 0 }; i < args.size(); i++) {
 		context->define(std::to_string(i), args.at(i), false, location());
@@ -188,20 +201,22 @@ std::any to_string(std::shared_ptr<interpreter> i, std::any& rhs)
 	return oss.str();
 }
 
-std::any print(std::shared_ptr<interpreter> i, std::vector<std::any> args)
+
+// stdlib
+std::any print(std::shared_ptr<interpreter> i, _args args)
 {
-	for (auto arg : args) {
-		std::cout << std::any_cast<std::string>(to_string(i, arg));
+	for (unsigned int j{ 0 }; j < args.size(); j++) {
+		std::cout << std::any_cast<std::string>(::to_string(i, args.at(j)));
 	}
 	return nullptr;
 }
 
-std::any print_environment(std::shared_ptr<interpreter> i, std::vector<std::any> args)
+std::any print_environment(std::shared_ptr<interpreter> i, _args args)
 {
-	check_context(i);
-	i->get_context()->output();
+	fetch_context(i)->output();
 	return nullptr;
 }
+
 
 class ContextBuilder
 {
@@ -265,6 +280,9 @@ public:
 
 		db_env_ar->environment->define("db",
 			std::make_shared<db_helper>(),
+			true);
+		db_env_ar->environment->define("table_example",
+			std::make_shared<native_fn>("table_example", db_table_create),
 			true);
 
 

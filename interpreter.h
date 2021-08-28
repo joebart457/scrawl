@@ -14,6 +14,8 @@ class execution_context;
 void check_context(std::shared_ptr<interpreter> i);
 void check_context(std::shared_ptr<interpreter> i, const location& loc);
 void check_context(std::shared_ptr<execution_context> i);
+std::shared_ptr<execution_context> fetch_context(std::shared_ptr<interpreter> i);
+
 
 class OperatorHandler;
 struct activation_record;

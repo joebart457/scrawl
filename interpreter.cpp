@@ -38,6 +38,15 @@ void check_context(std::shared_ptr<interpreter> i, const location& loc)
 	}
 }
 
+std::shared_ptr<execution_context> fetch_context(std::shared_ptr<interpreter> i)
+{
+	auto context_ptr = i->get_context();
+	if (i == nullptr || context_ptr == nullptr) {
+		location loc;
+		throw ProgramException("cannot execute code in null context", loc, Severity().FATAL());
+	}
+	return context_ptr;
+}
 
 
 std::string createOperatorSignature(std::string szName, std::vector<std::any> args)
@@ -295,8 +304,6 @@ std::any interpreter::acceptExpression(std::shared_ptr<expression> expr)
 
 std::any interpreter::acceptAssignment(std::shared_ptr<assignment> assignmnt)
 {
-
-	/* TODO: Test pointer effects of this*/
 	std::any val = acceptExpression(assignmnt->val);
 	if (assignmnt->lhs != nullptr) {
 		std::any lhs = acceptExpression(assignmnt->lhs);
@@ -333,17 +340,21 @@ std::any interpreter::acceptBinary(std::shared_ptr<binary> expr_binary)
 	std::any rhs = acceptExpression(expr_binary->rhs);
 	std::any lhs = acceptExpression(expr_binary->lhs);
 
+	std::vector<std::any> arguments = { lhs, rhs };
+
 	return m_opHandler->getOperator(createOperatorSignature(expr_binary->op, { lhs, rhs }))
-		->call(std::static_pointer_cast<interpreter>(shared_from_this()), { lhs, rhs });
+		->call(std::static_pointer_cast<interpreter>(shared_from_this()), _args(arguments));
 }
 
 
 std::any interpreter::acceptUnary(std::shared_ptr<unary> expr_unary)
 {
 	std::any rhs = acceptExpression(expr_unary->rhs);
+	std::vector<std::any> arguments = { rhs };
+
 
 	return m_opHandler->getOperator(createOperatorSignature(expr_unary->op, { rhs }))
-		->call(std::static_pointer_cast<interpreter>(shared_from_this()), { rhs });
+		->call(std::static_pointer_cast<interpreter>(shared_from_this()), _args(arguments));
 }
 
 
@@ -359,7 +370,7 @@ std::any interpreter::acceptCall(std::shared_ptr<call> expr_call)
 	
 	std::shared_ptr<callable> callee_internal = getCallable(callee);
 
-	return callee_internal->call(std::static_pointer_cast<interpreter>(shared_from_this()), arguments);
+	return callee_internal->call(std::static_pointer_cast<interpreter>(shared_from_this()), _args(arguments));
 }
 
 
@@ -410,7 +421,7 @@ std::any interpreter::acceptInitializer(std::shared_ptr<initializer> expr_intial
 	klass_instance ki = klass_def->create();
 	
 	std::shared_ptr<callable> constructor = getCallable(ki.Get("constructor", expr_intializer->m_loc));
-	constructor->call(std::static_pointer_cast<interpreter>(shared_from_this()), args);
+	constructor->call(std::static_pointer_cast<interpreter>(shared_from_this()), _args(args));
 	return ki;
 }
 

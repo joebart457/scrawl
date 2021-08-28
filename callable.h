@@ -11,9 +11,53 @@
 #include <iostream>
 
 #include "statement.h"
+#include "exceptions.h"
+#include "location.h"
 
 class interpreter;
 struct activation_record;
+
+class _args
+{
+public:
+	_args(std::vector<std::any>& data)
+	{
+		m_data = data;
+	}
+	_args(){}
+	~_args(){}
+
+	std::any& at(unsigned int index)
+	{
+		return m_data.at(index);
+	}
+
+	std::vector<std::any> subset(unsigned int offset_front, unsigned int offset_back = 0) {
+		return std::vector<std::any>(m_data.begin() + offset_front, m_data.end() + offset_back);
+	}
+
+	size_t size()
+	{
+		return m_data.size();
+	}
+
+	template <typename _Ty>
+	_Ty get(unsigned int index)
+	{
+		if (index < m_data.size()) {
+			if (m_data.at(index).type() != typeid(_Ty)) {
+				throw ProgramException("unable to retrieve object from callable arguments; type mismatch "
+					+std::string(m_data.at(index).type().name())+" != "+std::string(typeid(_Ty).name()), location());
+			}
+			return std::any_cast<_Ty>(m_data.at(index));
+		}
+		throw ProgramException("index out of range "+std::to_string(m_data.size())+" < "+std::to_string(index), location());
+	}
+
+private:
+	std::vector<std::any> m_data;
+};
+
 
 class callable :
 	public std::enable_shared_from_this<callable>
@@ -24,7 +68,8 @@ public:
 	callable(std::string szName, std::vector<param> params)
 		:m_szName{ szName }, m_params{ params } {}
 
-	virtual std::any call(std::shared_ptr<interpreter> c, ::std::vector<std::any> arguments) = 0;
+	virtual std::any call(std::shared_ptr<interpreter> c, _args arguments) = 0;
+
 
 	virtual std::string getSignature();
 
@@ -34,7 +79,7 @@ protected:
 };
 
 
-typedef std::any(*func)(std::shared_ptr<interpreter>, std::vector<std::any>);
+typedef std::any(*func)(std::shared_ptr<interpreter>, _args);
 
 class native_fn :
 	public callable {
@@ -45,7 +90,7 @@ public:
 		:callable(fn.m_szName, fn.m_params), m_hFn{ fn.m_hFn }, m_enclosing{ fn.m_enclosing }, m_variadic{ fn.m_variadic }, m_variadic_after{ fn.m_variadic_after } {}
 	~native_fn() {}
 
-	std::any call(std::shared_ptr<interpreter> c, std::vector<std::any> args);
+	std::any call(std::shared_ptr<interpreter> c, _args args);
 
 	void setEnclosing(std::shared_ptr<activation_record> ar);
 	std::shared_ptr<native_fn> setVariadic();
@@ -71,7 +116,7 @@ public:
 
 	~custom_fn() {}
 
-	std::any call(std::shared_ptr<interpreter> c, std::vector<std::any> arguments);
+	std::any call(std::shared_ptr<interpreter> c, _args arguments);
 
 	void setEnclosing(std::shared_ptr<activation_record> ar);
 private:
@@ -91,7 +136,7 @@ public:
 		:callable(szName), m_hFn{ fn } {}
 	~unary_fn() {}
 
-	std::any call(std::shared_ptr<interpreter> c, std::vector<std::any> args);
+	std::any call(std::shared_ptr<interpreter> c, _args args);
 
 
 	std::shared_ptr<callable> registerParameter(const param& p);
@@ -115,7 +160,7 @@ public:
 		:callable(szName), m_hFn{ fn } {}
 	~binary_fn() {}
 
-	std::any call(std::shared_ptr<interpreter> c, std::vector<std::any> args);
+	std::any call(std::shared_ptr<interpreter> c, _args args);
 
 	std::shared_ptr<binary_fn> registerParameter(const param& p);
 

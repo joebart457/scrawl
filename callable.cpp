@@ -27,11 +27,9 @@ std::string callable::getSignature()
 
 
 
-std::any native_fn::call(std::shared_ptr<interpreter> c, std::vector<std::any> args)
+std::any native_fn::call(std::shared_ptr<interpreter> c, _args args)
 {
-	check_context(c);
-	std::shared_ptr<execution_context> context = c->get_context();
-	check_context(context);
+	std::shared_ptr<execution_context> context = fetch_context(c);
 	
 	std::any ret = nullptr;
 	context->push_ar(m_enclosing);
@@ -68,7 +66,7 @@ std::any native_fn::call(std::shared_ptr<interpreter> c, std::vector<std::any> a
 
 		}
 
-		ret = m_hFn(c, cleanedArgs);
+		ret = m_hFn(c, _args(cleanedArgs));
 	}
 	catch (ReturnException ret) {
 		// Reset environment
@@ -114,7 +112,7 @@ std::shared_ptr<native_fn> native_fn::registerParameter(const param& p)
 	return std::static_pointer_cast<native_fn>(shared_from_this());
 }
 
-std::any custom_fn::call(std::shared_ptr<interpreter> c, std::vector<std::any> arguments)
+std::any custom_fn::call(std::shared_ptr<interpreter> c, _args arguments)
 {
 	check_context(c);
 	std::shared_ptr<execution_context> context = c->get_context();
@@ -175,7 +173,7 @@ void custom_fn::setEnclosing(std::shared_ptr<activation_record> ar)
 }
 
 
-std::any unary_fn::call(std::shared_ptr<interpreter> c, std::vector<std::any> args)
+std::any unary_fn::call(std::shared_ptr<interpreter> c, _args args)
 {
 	check_context(c);
 	if (args.size() != 1) {
@@ -203,7 +201,7 @@ std::string unary_fn::getSignature()
 }
 
 
-std::any binary_fn::call(std::shared_ptr<interpreter> c, std::vector<std::any> args)
+std::any binary_fn::call(std::shared_ptr<interpreter> c,  _args args)
 {
 	check_context(c);
 	if (args.size() != m_params.size() || m_params.size() != 2) {
