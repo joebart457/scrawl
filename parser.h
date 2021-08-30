@@ -82,6 +82,9 @@ public:
 		if (m_pi.match(Keywords().IF())) {
 			return parse_if();
 		}
+		if (m_pi.match(Keywords().SWITCH())) {
+			return parse_switch();
+		}
 		if (m_pi.match(Keywords().WHILE())) {
 			return parse_while();
 		}
@@ -217,6 +220,35 @@ public:
 			elseDo = parse_statement();
 		}
 		return std::make_shared<if_statement>(expr, body, elseDo, tok.loc());
+	}
+
+	std::shared_ptr<switch_statement> parse_switch()
+	{
+		token tok = m_pi.consume(Keywords().LPAREN(), "Expect (<testval>) after 'switch'.");
+		std::shared_ptr<expression> expr = parse_expression();
+		m_pi.consume(Keywords().RPAREN(), "Expect (<testval>) after 'switch'.");
+		m_pi.consume(Keywords().LCURLY(), "Expect '{' after switch (<testval>)");
+		std::vector<switch_case> switch_cases;
+		switch_case sc;
+		bool expectCase = true;
+		do {
+			if (m_pi.match(Keywords().CASE())) {
+				expectCase = false;
+				sc.cases.push_back(parse_expression());
+				m_pi.consume(Keywords().COLON(), "Expect ':' after test value in switch case");
+			}
+			else if (!expectCase && m_pi.match(Keywords().LCURLY())) {
+				sc.then = parse_block();
+				switch_cases.push_back(sc);
+			} 
+			else if (m_pi.match(Keywords().DEFAULT())) {
+				expectCase = false;
+				m_pi.consume(Keywords().COLON(), "Expect ':' after 'default' in switch case");
+				sc.isDefault = true;
+			}
+			throw ParsingException("Unexpected token in switch case", m_pi.current().loc());
+		} while (m_pi.current().type() == Keywords().CASE() || m_pi.current().type() == Keywords().DEFAULT() || m_pi.current().type() == Keywords().LCURLY());
+		return std::make_shared<switch_statement>(expr, switch_cases, tok.loc());
 	}
 
 	std::shared_ptr<while_statement> parse_while()

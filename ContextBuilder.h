@@ -113,45 +113,6 @@ std::any list_constructor(std::shared_ptr<interpreter> i, _args args)
 // Operators
 
 
-
-std::any add_int_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs) 
-{
-	return std::any_cast<int>(lhs) + std::any_cast<int>(rhs);
-}
-
-
-std::any less_than_int_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
-{
-	return std::any_cast<int>(lhs) < std::any_cast<int>(rhs);
-}
-
-
-std::any type_of_any(std::shared_ptr<interpreter> i, std::any& rhs) 
-{
-	return std::string(rhs.type().name());
-}
-
-std::any index_list_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
-{
-	unsigned long index = std::any_cast<unsigned long>(rhs);
-	klass_instance instance = std::any_cast<klass_instance>(lhs);
-	return instance.Get(std::to_string(index), location());
-}
-
-std::any index_list_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
-{
-	int index = std::any_cast<int>(rhs);
-	klass_instance instance = std::any_cast<klass_instance>(lhs);
-	return instance.Get(std::to_string(index), location());
-}
-
-std::any index_list_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
-{
-	std::string index = std::any_cast<std::string > (rhs);
-	klass_instance instance = std::any_cast<klass_instance>(lhs);
-	return instance.Get(index, location());
-}
-
 std::any to_string(std::shared_ptr<interpreter> i, std::any& rhs)
 {
 	std::ostringstream oss;
@@ -275,8 +236,17 @@ public:
 			true
 		);
 
-		db_env_ar->environment->define("query",
-			std::make_shared<native_fn>("query", db_get, db_env_ar)->registerParameter(BuildParameter<std::string>()), true);
+
+		std::shared_ptr<activation_record> db_env_dbtypes_ar = std::make_shared<activation_record>();
+		db_env_dbtypes_ar->szAlias = "dbTypes";
+		db_env_dbtypes_ar->environment = std::make_shared<scope<std::any>>();
+
+		db_env_dbtypes_ar->environment->define("INTEGER", std::string("INTEGER"), true);
+		db_env_dbtypes_ar->environment->define("REAL", std::string("REAL"), true);
+		db_env_dbtypes_ar->environment->define("TEXT", std::string("TEXT"), true);
+
+		db_env_ar->environment->define("Types",
+			std::make_shared<klass_definition>("Types", db_env_dbtypes_ar), true);
 
 		db_env_ar->environment->define("db",
 			std::make_shared<db_helper>(),

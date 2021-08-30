@@ -70,7 +70,6 @@ public:
 
 	virtual std::any call(std::shared_ptr<interpreter> c, _args arguments) = 0;
 
-
 	virtual std::string getSignature();
 
 protected:

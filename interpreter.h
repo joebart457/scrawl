@@ -41,7 +41,9 @@ public:
 	void acceptBreakStatement(std::shared_ptr<break_statement> break_stmt);
 	void acceptDirectiveStatement(std::shared_ptr<directive_statement> directive_stmt);
 	void acceptBlock(std::shared_ptr<block> blk);
-	void acceptExpressionStatement(std::shared_ptr<expression_statement> blk);
+	void acceptExpressionStatement(std::shared_ptr<expression_statement> expr_statement);
+	void acceptSwitchStatement(std::shared_ptr<switch_statement> switch_stmt);
+
 	std::any acceptExpression(std::shared_ptr<expression> expr);
 	std::any acceptAssignment(std::shared_ptr<assignment> assignmnt);
 	std::any acceptLogicAnd(std::shared_ptr<logic_and> expr_logic_and);

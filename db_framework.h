@@ -359,6 +359,12 @@ public:
 		oss << "\n);";
 		return oss.str();
 	}
+	
+
+	void create(std::shared_ptr<db_helper> db)
+	{
+		db->get(get_creation_query(), nullptr);
+	}
 
 private:
 	std::string m_szName{ "" };

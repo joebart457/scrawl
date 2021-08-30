@@ -88,7 +88,9 @@ public:
 				ar->environment->define(it->first, fn, true);
 			}
 		}
-		return klass_instance(m_szName, alias, ar);
+		klass_instance instance = klass_instance(m_szName, alias, ar);
+		ar->environment->define("this", instance, true);
+		return instance;
 	}
 
 	bool Exists(const std::string& szName) {

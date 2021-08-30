@@ -66,3 +66,9 @@ void expression_statement::accept(std::shared_ptr<interpreter> i)
 {
 	i->acceptExpressionStatement(std::static_pointer_cast<expression_statement>(shared_from_this()));
 }
+
+
+void switch_statement::accept(std::shared_ptr<interpreter> i)
+{
+	i->acceptSwitchStatement(std::static_pointer_cast<switch_statement>(shared_from_this()));
+}

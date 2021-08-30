@@ -212,3 +212,26 @@ public:
 private:
 	std::shared_ptr<expression> m_expr{ nullptr };
 };
+
+struct switch_case {
+	std::vector<std::shared_ptr<expression>> cases;
+	std::shared_ptr<statement> then;
+	bool isDefault = false;
+};
+
+
+class switch_statement :
+	public statement {
+	friend class interpreter;
+public:
+	switch_statement(std::shared_ptr<expression> expr,
+		std::vector<switch_case> cases,
+		const location& loc)
+		:statement("switch_statement", loc), m_testValue{ expr }, m_cases{ cases } {}
+	~switch_statement() {}
+
+	virtual void accept(std::shared_ptr<interpreter> i);
+private:
+	std::shared_ptr<expression> m_testValue{ nullptr };
+	std::vector<switch_case> m_cases;
+};

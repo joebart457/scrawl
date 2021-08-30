@@ -280,6 +280,42 @@ std::shared_ptr<activation_record> interpreter::acceptBlock_KeepEnvironment(std:
 	return m_context->pop_ar();
 }
 
+void interpreter::acceptSwitchStatement(std::shared_ptr<switch_statement> switch_stmt)
+{
+	std::any test = acceptExpression(switch_stmt->m_testValue);
+
+	for (switch_case c : switch_stmt->m_cases) {
+		bool matched = false;
+		if (c.isDefault) {
+			try {
+				acceptStatement(c.then);
+			}
+			catch (BreakException) {
+				break;
+			}
+			continue;
+		}
+		for (auto expr : c.cases) {
+			std::any rhs = acceptExpression(expr);
+			std::vector<std::any> arguments = { test, rhs };
+
+			if (isTruthy(m_opHandler->getOperator(createOperatorSignature("==", arguments))->call(std::static_pointer_cast<interpreter>(shared_from_this()), _args(arguments))))
+			{
+				matched = true;
+				break;
+			}
+		}
+		if (matched) {
+			try {
+				acceptStatement(c.then);
+			}
+			catch (BreakException) {
+				break;
+			}
+		}
+	}
+	
+}
 
 
 void interpreter::acceptExpressionStatement(std::shared_ptr<expression_statement> expr_stmt)

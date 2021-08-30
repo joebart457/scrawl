@@ -21,6 +21,7 @@ std::ostream& operator<<(std::ostream& out, const std::any& obj);
 
 template <class _Ty>
 class scope {
+	friend class Pickler;
 public:
 	scope() : m_id{ 0 } {}
 	scope(unsigned int id) :m_id{ id } {}

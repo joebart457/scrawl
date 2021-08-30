@@ -9,6 +9,12 @@ class Keywords {
 public:
 	static std::string FUNCTION() { return "function"; }
 	static std::string CLASS() { return "class"; }
+	static std::string SWITCH() { return "switch"; }
+	static std::string CASE() { return "case"; }
+	static std::string DEFAULT() { return "default"; }
+
+	static std::string TRY() { return "try"; }
+	static std::string CATCH() { return "catch"; }
 
 	static std::string UINT() { return "uint"; }
 	static std::string INT() { return "int"; }
@@ -39,6 +45,7 @@ public:
 	static std::string COMMA() { return "comma"; }
 	static std::string DOT() { return "dot"; }
 	static std::string SEMI() { return "semi"; }
+	static std::string COLON() { return "colon"; }
 	static std::string BANG() { return "bang"; }
 
 	static std::string EQUAL() { return "equal"; }
