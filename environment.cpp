@@ -2,8 +2,7 @@
 
 #include "exceptions.h"
 #include "callable.h"
-
-#include <iostream>
+#include "Utilities.h"
 
 
 bool Environment::Exists(const std::string& szKey)
@@ -97,54 +96,13 @@ void Environment::SetEnclosing(std::shared_ptr<Environment> enclosing)
 }
 
 
-std::string to_string( std::any& rhs)
-{
-	std::ostringstream oss;
-	if (rhs.type() == typeid(int)) {
-		oss << std::any_cast<int>(rhs);
-	}
-	else if (rhs.type() == typeid(bool)) {
-		oss << std::any_cast<bool>(rhs);
-	}
-	else if (rhs.type() == typeid(float)) {
-		oss << std::any_cast<float>(rhs);
-	}
-	else if (rhs.type() == typeid(double)) {
-		oss << std::any_cast<double>(rhs);
-	}
-	else if (rhs.type() == typeid(unsigned long)) {
-		oss << std::any_cast<unsigned long>(rhs);
-	}
-	else if (rhs.type() == typeid(std::string)) {
-		oss << std::any_cast<std::string>(rhs);
-	}
-	// TODO: do this better
-	else if (rhs.type() == typeid(std::shared_ptr<native_fn>)) {
-		oss << (std::any_cast<std::shared_ptr<native_fn>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<native_fn>>(rhs)->getSignature());
-	}
-	else if (rhs.type() == typeid(std::shared_ptr<binary_fn>)) {
-		oss << (std::any_cast<std::shared_ptr<binary_fn>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<binary_fn>>(rhs)->getSignature());
-	}
-	else if (rhs.type() == typeid(std::shared_ptr<unary_fn>)) {
-		oss << (std::any_cast<std::shared_ptr<unary_fn>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<unary_fn>>(rhs)->getSignature());
-	}
-	else if (rhs.type() == typeid(std::shared_ptr<callable>)) {
-		oss << (std::any_cast<std::shared_ptr<callable>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<callable>>(rhs)->getSignature());
-	}
-
-
-	else {
-		oss << "<object>";
-	}
-	return oss.str();
-}
 
 std::string Environment::toString(std::string tabs)
 {
 	std::string result{ "" };
 	std::shared_ptr<Environment> e = std::make_shared<Environment>(m_enclosing);
 	for (auto it = m_values.begin(); it != m_values.end(); it++) {
-		result += tabs + it->first + " := " + to_string(it->second) + "\n";
+		result += tabs + it->first + " := " + Utilities().stringify(it->second) + "\n";
 	}
 
 	if (m_enclosing != nullptr) {

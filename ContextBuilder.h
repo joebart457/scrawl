@@ -17,166 +17,18 @@
 #include "tokenizer.hpp"
 #include "klass_instance.h"
 
-
+#include "operators.h"
 #include "db_framework.h"
 
 
-// DB Methods
-std::any db_table_create(std::shared_ptr<interpreter> i, _args args)
-{
-	db_table table("company", {
-		db_column("id", SQLITE_INTEGER)
-			.PRIMARY_KEY()
-			.NOT_NULL()
-			.AUTOINCREMENT(),
-		db_column("name")
-			.NOT_NULL(),
-		db_column("country_id", SQLITE_INTEGER)
-			.FOREIGN_KEY("country(id)"),
-		db_column("random_column").UNIQUE()
-		});
-	return table.get_creation_query();
-}
 
 
-std::any db_open(std::shared_ptr<interpreter> i, _args args)
-{
-	std::shared_ptr<execution_context> context = fetch_context(i);
 
-	std::shared_ptr<db_helper> db = context->get<std::shared_ptr<db_helper>>("db");
-	db->open(args.get<std::string>(0));
-	return nullptr;
-}
-
-
-std::any db_get(std::shared_ptr<interpreter> i, _args args)
-{
-	std::shared_ptr<execution_context> context = fetch_context(i);
-
-	std::shared_ptr<db_helper> db = context->get<std::shared_ptr<db_helper>>("db");
-
-	std::vector<std::any> results = db->get(args.get<std::string>(0));
-
-	std::shared_ptr<klass_definition> ls = context->get<std::shared_ptr<klass_definition>>("list");
-	klass_instance results_container = ls->create();
-	std::any_cast<std::shared_ptr<native_fn>>(results_container.Get("constructor", location()))->call(i, _args(results));
-	return results_container;
-}
-
-
-std::any db_run_prepared_query(std::shared_ptr<interpreter> i, _args args)
-{
-	std::shared_ptr<execution_context> context = fetch_context(i);
-
-	std::shared_ptr<db_helper> db = context->get<std::shared_ptr<db_helper>>("db");
-	
-	std::vector<std::any> results = db->run_prepared(
-		std::any_cast<std::string>(args.at(0)),
-		args.subset(2, 0), 
-		args.get<std::shared_ptr<klass_definition>>(1),
-		false);
-
-	std::shared_ptr<klass_definition> ls = context->get<std::shared_ptr<klass_definition>>("list");
-	klass_instance results_container = ls->create();
-	std::any_cast<std::shared_ptr<native_fn>>(results_container.Get("constructor", location()))->call(i, _args(results));
-	return results_container;
-}
-
-
-// List methods
-std::any list_push(std::shared_ptr<interpreter> i, _args args)
-{
-	std::shared_ptr<execution_context> context = fetch_context(i);
-
-	unsigned long size = context->get<unsigned long>("size");
-
-	context->define(std::to_string(size), args.at(0), false, location());
-	context->assign("size", ((unsigned long)size + 1), location());
-
-	return nullptr;
-}
-
-
-std::any list_constructor(std::shared_ptr<interpreter> i, _args args)
-{
-	std::shared_ptr<execution_context> context = fetch_context(i);
-
-	for (unsigned int i{ 0 }; i < args.size(); i++) {
-		context->define(std::to_string(i), args.at(i), false, location());
-	}
-	context->assign("size", (unsigned long)args.size(), location());
-
-	return nullptr;
-}
 
 
 // Operators
 
 
-std::any to_string(std::shared_ptr<interpreter> i, std::any& rhs)
-{
-	std::ostringstream oss;
-	if (rhs.type() == typeid(int)) {
-		oss << std::any_cast<int>(rhs);
-	}
-	else if (rhs.type() == typeid(bool)) {
-		oss << std::any_cast<bool>(rhs);
-	}
-	else if (rhs.type() == typeid(float)) {
-		oss << std::any_cast<float>(rhs);
-	}
-	else if (rhs.type() == typeid(double)) {
-		oss << std::any_cast<double>(rhs);
-	}
-	else if (rhs.type() == typeid(unsigned long)) {
-		oss << std::any_cast<unsigned long>(rhs);
-	}
-	else if (rhs.type() == typeid(std::string)) {
-		oss << std::any_cast<std::string>(rhs);
-	}
-	// TODO: do this better
-	else if (rhs.type() == typeid(std::shared_ptr<native_fn>)) {
-		oss << (std::any_cast<std::shared_ptr<native_fn>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<native_fn>>(rhs)->getSignature());
-	}
-	else if (rhs.type() == typeid(std::shared_ptr<binary_fn>)) {
-		oss << (std::any_cast<std::shared_ptr<binary_fn>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<binary_fn>>(rhs)->getSignature());
-	}
-	else if (rhs.type() == typeid(std::shared_ptr<custom_fn>)) {
-		oss << (std::any_cast<std::shared_ptr<custom_fn>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<custom_fn>>(rhs)->getSignature());
-	}
-	else if (rhs.type() == typeid(std::shared_ptr<unary_fn>)) {
-		oss << (std::any_cast<std::shared_ptr<unary_fn>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<unary_fn>>(rhs)->getSignature());
-	}
-	else if (rhs.type() == typeid(std::shared_ptr<callable>)) {
-		oss << (std::any_cast<std::shared_ptr<callable>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<callable>>(rhs)->getSignature());
-	}
-	else if (rhs.type() == typeid(std::shared_ptr<klass_definition>)) {
-		oss << (std::any_cast<std::shared_ptr<klass_definition>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<klass_definition>>(rhs)->toString());
-	}
-	else if (rhs.type() == typeid(klass_instance)) {
-		oss << std::any_cast<klass_instance>(rhs).toString();
-	}
-	else {
-		oss << "<object>";
-	}
-	return oss.str();
-}
-
-
-// stdlib
-std::any print(std::shared_ptr<interpreter> i, _args args)
-{
-	for (unsigned int j{ 0 }; j < args.size(); j++) {
-		std::cout << std::any_cast<std::string>(::to_string(i, args.at(j)));
-	}
-	return nullptr;
-}
-
-std::any print_environment(std::shared_ptr<interpreter> i, _args args)
-{
-	fetch_context(i)->output();
-	return nullptr;
-}
 
 
 class ContextBuilder
@@ -356,6 +208,11 @@ public:
 			tokenizer_rule(Keywords().FALSE(), "false"),
 			tokenizer_rule(Keywords().NUL(), "null"),
 			tokenizer_rule(Keywords().BREAK(), "break"),
+			tokenizer_rule(Keywords().SWITCH(), "switch"),
+			tokenizer_rule(Keywords().CASE(), "case"),
+			tokenizer_rule(Keywords().DEFAULT(), "default"),
+			tokenizer_rule(Keywords().TRY(), "try"),
+			tokenizer_rule(Keywords().CATCH(), "catch"),
 
 
 			/* types */

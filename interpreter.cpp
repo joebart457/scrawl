@@ -92,31 +92,6 @@ std::shared_ptr<callable> getCallable(std::any callee) {
 	}
 }
 
-bool isTruthy(std::any obj)
-{
-	if (obj.type() == typeid(int)) {
-		return std::any_cast<int>(obj);
-	}
-	else if (obj.type() == typeid(unsigned long)) {
-		return std::any_cast<unsigned long>(obj);
-	}
-	else if (obj.type() == typeid(bool)) {
-		return std::any_cast<bool>(obj);
-	}
-	else if (obj.type() == typeid(float)) {
-		return std::any_cast<float>(obj);
-	}
-	else if (obj.type() == typeid(double)) {
-		return std::any_cast<double>(obj);
-	}
-	else if (obj.type() == typeid(std::string)) {
-		return std::any_cast<std::string>(obj).size() > 0;
-	}
-
-	throw ProgramException("Unsupported object type '" + std::string(obj.type().name()), location());
-
-}
-
 interpreter::interpreter(std::shared_ptr<execution_context> context, std::shared_ptr<OperatorHandler> opHandler)
 	:m_context{ context }, m_opHandler{ opHandler }{}
 interpreter::interpreter()

@@ -7,6 +7,8 @@
 #include "scope.h"
 
 #include "exceptions.h"
+#include "Utilities.h"
+
 class Pickler
 {
 public: 
@@ -32,7 +34,7 @@ public:
 
 		auto lookup = environment->m_lookup;
 		for (auto it = lookup.begin(); it != lookup.end(); it++) {
-			m_db->run_prepared(szInsertQueryTemplate, { it->first, it->second.type().name(), it->second }, nullptr, false);
+			m_db->run_prepared(szInsertQueryTemplate, { it->first, it->second.type().name(), Utilities().stringify(it->second) }, nullptr, false);
 		}
 
 
@@ -46,54 +48,7 @@ private:
 
 	}
 
-	std::any to_string(std::shared_ptr<interpreter> i, std::any& rhs)
-	{
-		std::ostringstream oss;
-		if (rhs.type() == typeid(int)) {
-			oss << std::any_cast<int>(rhs);
-		}
-		else if (rhs.type() == typeid(bool)) {
-			oss << std::any_cast<bool>(rhs);
-		}
-		else if (rhs.type() == typeid(float)) {
-			oss << std::any_cast<float>(rhs);
-		}
-		else if (rhs.type() == typeid(double)) {
-			oss << std::any_cast<double>(rhs);
-		}
-		else if (rhs.type() == typeid(unsigned long)) {
-			oss << std::any_cast<unsigned long>(rhs);
-		}
-		else if (rhs.type() == typeid(std::string)) {
-			oss << std::any_cast<std::string>(rhs);
-		}
-		// TODO: do this better
-		else if (rhs.type() == typeid(std::shared_ptr<native_fn>)) {
-			oss << (std::any_cast<std::shared_ptr<native_fn>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<native_fn>>(rhs)->getSignature());
-		}
-		else if (rhs.type() == typeid(std::shared_ptr<binary_fn>)) {
-			oss << (std::any_cast<std::shared_ptr<binary_fn>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<binary_fn>>(rhs)->getSignature());
-		}
-		else if (rhs.type() == typeid(std::shared_ptr<custom_fn>)) {
-			oss << (std::any_cast<std::shared_ptr<custom_fn>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<custom_fn>>(rhs)->getSignature());
-		}
-		else if (rhs.type() == typeid(std::shared_ptr<unary_fn>)) {
-			oss << (std::any_cast<std::shared_ptr<unary_fn>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<unary_fn>>(rhs)->getSignature());
-		}
-		else if (rhs.type() == typeid(std::shared_ptr<callable>)) {
-			oss << (std::any_cast<std::shared_ptr<callable>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<callable>>(rhs)->getSignature());
-		}
-		else if (rhs.type() == typeid(std::shared_ptr<klass_definition>)) {
-			oss << (std::any_cast<std::shared_ptr<klass_definition>>(rhs) == nullptr ? "<null>" : std::any_cast<std::shared_ptr<klass_definition>>(rhs)->toString());
-		}
-		else if (rhs.type() == typeid(klass_instance)) {
-			oss << std::any_cast<klass_instance>(rhs).toString();
-		}
-		else {
-			oss << "<object>";
-		}
-		return oss.str();
-	}
+	
 
 	std::string ToTableName(const std::string& raw)
 	{
