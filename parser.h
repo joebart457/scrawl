@@ -97,7 +97,10 @@ public:
 			return std::make_shared<break_statement>(tok.loc());
 		}
 		if (m_pi.match(Keywords().RUN())) {
-			return parse_block();
+			return parse_run_recover();
+		}
+		if (m_pi.match(Keywords().PANIC())) {
+			return parse_panic();
 		}
 		if (m_pi.match(Keywords().LCURLY())) {
 			return parse_block();
@@ -135,7 +138,10 @@ public:
 			return parse_variable_declaration();
 		}
 		if (m_pi.match(Keywords().RUN())) {
-			return parse_block();
+			return parse_run_recover();
+		}
+		if (m_pi.match(Keywords().PANIC())) {
+			return parse_panic();
 		}
 		if (m_pi.match(Keywords().SWITCH())) {
 			return parse_switch();
@@ -273,7 +279,7 @@ public:
 	{
 		token tok = m_pi.previous();
 		std::shared_ptr<expression> expr;
-		if (!m_pi.match("semi")) {
+		if (!m_pi.match(Keywords().SEMI())) {
 			expr = parse_expression();
 			m_pi.consume(Keywords().SEMI(), "Expect ';' at end of return statement.");
 		}
@@ -304,6 +310,24 @@ public:
 		m_pi.consume(Keywords().SEMI(), "Expect ';' at end of recover statement.");
 
 		return std::make_shared<run_recover_statement>(run, type, name, tok.loc());
+	}
+
+
+	std::shared_ptr<panic_statement> parse_panic()
+	{
+		token tok = m_pi.previous();
+		std::shared_ptr<expression> expr;
+		m_pi.consume(Keywords().LPAREN(), "Expect '(' after 'panic'");
+		if (!m_pi.match(Keywords().RPAREN())) {
+			expr = parse_expression();
+			m_pi.consume(Keywords().RPAREN(), "Expect enclosing ')' in panic");
+			m_pi.consume(Keywords().SEMI(), "Expect ';' at end of panic statement.");
+		}
+		else {
+			expr = std::make_shared<primary>(nullptr, tok.loc());
+			m_pi.consume(Keywords().SEMI(), "Expect ';' at end of panic statement.");
+		}
+		return std::make_shared<panic_statement>(expr, tok.loc());
 	}
 
 

@@ -16,6 +16,7 @@ public:
 	static std::string RUN() { return "run"; }
 	static std::string RECOVER() { return "recover"; }
 	static std::string ON() { return "on"; }
+	static std::string PANIC() { return "panic"; }
 
 	static std::string UINT() { return "uint"; }
 	static std::string INT() { return "int"; }

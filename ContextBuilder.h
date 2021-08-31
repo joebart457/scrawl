@@ -2081,8 +2081,10 @@ public:
 			tokenizer_rule(Keywords().SWITCH(), "switch"),
 			tokenizer_rule(Keywords().CASE(), "case"),
 			tokenizer_rule(Keywords().DEFAULT(), "default"),
-			tokenizer_rule(Keywords().TRY(), "try"),
-			tokenizer_rule(Keywords().CATCH(), "catch"),
+			tokenizer_rule(Keywords().RUN(), "run"),
+			tokenizer_rule(Keywords().RECOVER(), "recover"),
+            tokenizer_rule(Keywords().ON(), "on"),
+            tokenizer_rule(Keywords().PANIC(), "panic"),
 
 
 			/* types */

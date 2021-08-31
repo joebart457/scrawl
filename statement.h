@@ -255,3 +255,17 @@ private:
 	std::string m_szTypename{ "" };
 	std::string m_szName{ "" };
 };
+
+
+class panic_statement :
+	public statement {
+	friend class interpreter;
+public:
+	panic_statement(std::shared_ptr<expression> expr, const location& loc)
+		:statement("panic_statement", loc), m_expr{ expr } {}
+	~panic_statement() {}
+
+	virtual void accept(std::shared_ptr<interpreter> i);
+private:
+	std::shared_ptr<expression> m_expr{ nullptr };
+};
