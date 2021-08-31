@@ -31,7 +31,7 @@ public:
 	static std::string IF() { return "if"; }
 	static std::string ELSE() { return "else"; }
 	static std::string WHILE() { return "while"; }
-	static std::string RETURN() { return "import"; }
+	static std::string RETURN() { return "return"; }
 	static std::string BREAK() { return "break"; }
 	static std::string CONTINUE() { return "continue"; }
 

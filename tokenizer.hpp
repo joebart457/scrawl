@@ -1,9 +1,5 @@
 #pragma once
 
-
-#pragma once
-#pragma once
-
 #ifndef __INCLUDE_UTOKENIZER_H
 #define __INCLUDE_UTOKENIZER_H
 
@@ -18,6 +14,8 @@
 
 #define TOKEN_TYPE_STRING_ENCLOSING				"tt_str_enclosing"
 #define TOKEN_TYPE_EOL_COMMENT					"tt_eol_comment"
+#define TOKEN_TYPE_ML_COMMENT_START				"tt_ml_comment_start"
+#define TOKEN_TYPE_ML_COMMENT_ENCLOSING			"tt_ml_comment_enclosing"
 #define TOKEN_TYPE_EOF							"tt_eof"
 #define TOKEN_TYPE_WORD							"tt_word"
 #define TOKEN_TYPE_STRING						"tt_string"
@@ -137,6 +135,10 @@ protected:
 };
 
 
+bool isMLCommentEnclosing(tokenizer_rule rule) {
+	return rule.getType() == TOKEN_TYPE_ML_COMMENT_ENCLOSING;
+}
+
 
 class tokenizer
 {
@@ -231,7 +233,8 @@ private:
 
 	token next()
 	{
-		bool commentFlag{ false };
+		bool eolCommentFlag{ false };
+		bool mlCommentFlag{ false };
 		while (!m_bAtEnd) {
 
 			if (m_cCurrent == '\0') {
@@ -250,6 +253,7 @@ private:
 			for (unsigned int i{ 0 }; i < m_rules.size(); i++) {
 				tokenizer_rule rule = m_rules.at(i);
 				if (next(rule.length()) == rule.getValue()) {
+
 					advance(rule.length());
 
 					if (rule.getType() == TOKEN_TYPE_STRING_ENCLOSING) {
@@ -260,13 +264,31 @@ private:
 					}
 
 					if (rule.getType() == TOKEN_TYPE_EOL_COMMENT) {
-						commentFlag = true;
+						eolCommentFlag = true;
+						break;
+					}
+
+					if (rule.getType() == TOKEN_TYPE_ML_COMMENT_START) {
+						mlCommentFlag = true;
 						break;
 					}
 
 					return token(rule, m_nRow, m_nColumn);
 				}
 			}
+
+			if (eolCommentFlag) {
+				eolcomment();
+				eolCommentFlag = false;
+				continue;
+			}
+
+			if (mlCommentFlag) {
+				mlcomment();
+				mlCommentFlag = false;
+				continue;
+			}
+
 
 			if (isdigit(m_cCurrent)) {
 				return number();
@@ -276,10 +298,6 @@ private:
 				return word();
 			}
 
-			if (commentFlag) {
-				comment();
-				continue;
-			}
 
 			token result = token(std::string(1, m_cCurrent), std::string(1, m_cCurrent), m_nRow, m_nColumn);
 			advance();
@@ -451,14 +469,28 @@ private:
 	}
 
 
-	void comment()
+	void eolcomment()
 	{
 		while (!m_bAtEnd && m_cCurrent != '\n' && m_cCurrent != '\r') {
 			advance();
 		}
 	}
 
+	void mlcomment()
+	{
+		auto it = std::find_if(m_rules.begin(), m_rules.end(), isMLCommentEnclosing);
+		std::string enclosing = it != m_rules.end() ? it->getValue() : "\n"; // if enclosing is not found, default to newline
+
+		while (!m_bAtEnd && next(enclosing.size()) != enclosing) {
+			advance();
+		}
+		if (!m_bAtEnd) {
+			advance(enclosing.size());
+		}
+	}
+
 private:
+
 	std::vector<tokenizer_rule> m_rules;
 	unsigned int m_nRow{ 0 }, m_nColumn{ 0 }, m_nIndex{ 0 };
 	char m_cCurrent{ '`' };

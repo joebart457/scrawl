@@ -11,6 +11,7 @@
 
 #include "klass_instance.h"
 #include "context.h"
+#include "Utilities.h"
 
 
 void check_context(std::shared_ptr<execution_context> c)
@@ -161,7 +162,7 @@ void interpreter::acceptVariableDeclaration(std::shared_ptr<variable_declaration
 			type = std::any_cast<klass_instance>(val).getType();
 		}
 		if (var_decl->m_szTypename != "" && type != var_decl->m_szTypename) {
-			throw ProgramException("type mismatch in variable declaration: " + std::string(val.type().name()) + " != " + var_decl->m_szTypename, var_decl->m_loc);
+			throw ProgramException("type mismatch in variable declaration: " + type + " != " + var_decl->m_szTypename, var_decl->m_loc);
 		}
 		m_context->define(var_decl->m_szName, val, false, var_decl->m_loc);
 	}
@@ -180,7 +181,7 @@ void interpreter::acceptReturnStatement(std::shared_ptr<return_statement> return
 
 void interpreter::acceptIfStatement(std::shared_ptr<if_statement> if_stmt)
 {
-	if (isTruthy(acceptExpression(if_stmt->m_condition))) {
+	if (Utilities().isTruthy(acceptExpression(if_stmt->m_condition))) {
 		acceptStatement(if_stmt->m_then);
 	}
 	else {
@@ -191,7 +192,7 @@ void interpreter::acceptIfStatement(std::shared_ptr<if_statement> if_stmt)
 
 void interpreter::acceptWhileStatement(std::shared_ptr<while_statement> while_stmt)
 {
-	while (isTruthy(acceptExpression(while_stmt->m_condition))) {
+	while (Utilities().isTruthy(acceptExpression(while_stmt->m_condition))) {
 		try {
 			acceptStatement(while_stmt->m_then);
 		}
@@ -274,7 +275,7 @@ void interpreter::acceptSwitchStatement(std::shared_ptr<switch_statement> switch
 			std::any rhs = acceptExpression(expr);
 			std::vector<std::any> arguments = { test, rhs };
 
-			if (isTruthy(m_opHandler->getOperator(createOperatorSignature("==", arguments))->call(std::static_pointer_cast<interpreter>(shared_from_this()), _args(arguments))))
+			if (Utilities().isTruthy(m_opHandler->getOperator(createOperatorSignature("==", arguments))->call(std::static_pointer_cast<interpreter>(shared_from_this()), _args(arguments))))
 			{
 				matched = true;
 				break;
@@ -338,12 +339,12 @@ std::any interpreter::acceptAssignment(std::shared_ptr<assignment> assignmnt)
 
 std::any interpreter::acceptLogicAnd(std::shared_ptr<logic_and> expr_logic_and)
 {
-	return isTruthy(acceptExpression(expr_logic_and->lhs)) && isTruthy(acceptExpression(expr_logic_and->rhs));
+	return Utilities().isTruthy(acceptExpression(expr_logic_and->lhs)) && Utilities().isTruthy(acceptExpression(expr_logic_and->rhs));
 }
 
 std::any interpreter::acceptLogicOr(std::shared_ptr<logic_or> expr_logic_or)
 {
-	return isTruthy(acceptExpression(expr_logic_or->lhs)) || isTruthy(acceptExpression(expr_logic_or->rhs));
+	return Utilities().isTruthy(acceptExpression(expr_logic_or->lhs)) || Utilities().isTruthy(acceptExpression(expr_logic_or->rhs));
 }
 
 std::any interpreter::acceptBinary(std::shared_ptr<binary> expr_binary)

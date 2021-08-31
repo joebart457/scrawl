@@ -4,11 +4,6 @@
 #include "exceptions.h"
 #include "Utilities.h"
 
-std::any add_int_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
-{
-	return std::any_cast<int>(lhs) + std::any_cast<int>(rhs);
-}
-
 
 std::any less_than_int_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
@@ -21,7 +16,7 @@ std::any type_of_any(std::shared_ptr<interpreter> i, std::any& rhs)
 	return std::string(rhs.type().name());
 }
 
-std::any index_list_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any index_list_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	unsigned long index = std::any_cast<unsigned long>(rhs);
 	klass_instance instance = std::any_cast<klass_instance>(lhs);
@@ -74,7 +69,7 @@ std::any add_int_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rh
 {
 	return std::any_cast<int>(lhs) + std::any_cast<int>(rhs);
 }
-std::any add_int_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any add_int_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<int>(lhs) + std::any_cast<unsigned long>(rhs);
 }
@@ -103,7 +98,7 @@ std::any subtract_int_int(std::shared_ptr<interpreter> i, std::any& lhs, std::an
 {
 	return std::any_cast<int>(lhs) - std::any_cast<int>(rhs);
 }
-std::any subtract_int_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any subtract_int_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<int>(lhs) - std::any_cast<unsigned long>(rhs);
 }
@@ -132,7 +127,7 @@ std::any multiply_int_int(std::shared_ptr<interpreter> i, std::any& lhs, std::an
 {
 	return std::any_cast<int>(lhs) * std::any_cast<int>(rhs);
 }
-std::any multiply_int_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any multiply_int_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<int>(lhs) * std::any_cast<unsigned long>(rhs);
 }
@@ -165,7 +160,7 @@ std::any divide_int_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any&
 	}
 	return std::any_cast<int>(lhs) / rhsVal;
 }
-std::any divide_int_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any divide_int_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	auto rhsVal = std::any_cast<unsigned long>(rhs);
 	if (rhsVal == 0) {
@@ -210,7 +205,7 @@ std::any index_int_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& 
 {
 	throw ProgramException("unsupported operation", location());
 }
-std::any index_int_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any index_int_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	throw ProgramException("unsupported operation", location());
 }
@@ -239,7 +234,7 @@ std::any lessthan_int_int(std::shared_ptr<interpreter> i, std::any& lhs, std::an
 {
 	return std::any_cast<int>(lhs) < std::any_cast<int>(rhs);
 }
-std::any lessthan_int_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any lessthan_int_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<int>(lhs) < std::any_cast<unsigned long>(rhs);
 }
@@ -268,7 +263,7 @@ std::any lessthanequal_int_int(std::shared_ptr<interpreter> i, std::any& lhs, st
 {
 	return std::any_cast<int>(lhs) <= std::any_cast<int>(rhs);
 }
-std::any lessthanequal_int_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any lessthanequal_int_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<int>(lhs) <= std::any_cast<unsigned long>(rhs);
 }
@@ -297,7 +292,7 @@ std::any greaterthan_int_int(std::shared_ptr<interpreter> i, std::any& lhs, std:
 {
 	return std::any_cast<int>(lhs) > std::any_cast<int>(rhs);
 }
-std::any greaterthan_int_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any greaterthan_int_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<int>(lhs) > std::any_cast<unsigned long>(rhs);
 }
@@ -326,7 +321,7 @@ std::any greaterthanequal_int_int(std::shared_ptr<interpreter> i, std::any& lhs,
 {
 	return std::any_cast<int>(lhs) >= std::any_cast<int>(rhs);
 }
-std::any greaterthanequal_int_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any greaterthanequal_int_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<int>(lhs) >= std::any_cast<unsigned long>(rhs);
 }
@@ -355,7 +350,7 @@ std::any equalequal_int_int(std::shared_ptr<interpreter> i, std::any& lhs, std::
 {
 	return std::any_cast<int>(lhs) == std::any_cast<int>(rhs);
 }
-std::any equalequal_int_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any equalequal_int_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<int>(lhs) == std::any_cast<unsigned long>(rhs);
 }
@@ -384,7 +379,7 @@ std::any notequal_int_int(std::shared_ptr<interpreter> i, std::any& lhs, std::an
 {
 	return std::any_cast<int>(lhs) != std::any_cast<int>(rhs);
 }
-std::any notequal_int_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any notequal_int_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<int>(lhs) != std::any_cast<unsigned long>(rhs);
 }
@@ -429,7 +424,7 @@ std::any not_unsignedlong(std::shared_ptr<interpreter> i, std::any& rhs)
 }
 std::any negate_unsignedlong(std::shared_ptr<interpreter> i, std::any& rhs)
 {
-	return -std::any_cast<unsigned long>(rhs);
+	throw ProgramException("unsupported operation", location());
 }
 
 
@@ -440,7 +435,7 @@ std::any add_unsignedlong_int(std::shared_ptr<interpreter> i, std::any& lhs, std
 {
 	return std::any_cast<unsigned long>(lhs) + std::any_cast<int>(rhs);
 }
-std::any add_unsignedlong_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any add_unsignedlong_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<unsigned long>(lhs) + std::any_cast<unsigned long>(rhs);
 }
@@ -469,7 +464,7 @@ std::any subtract_unsignedlong_int(std::shared_ptr<interpreter> i, std::any& lhs
 {
 	return std::any_cast<unsigned long>(lhs) - std::any_cast<int>(rhs);
 }
-std::any subtract_unsignedlong_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any subtract_unsignedlong_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<unsigned long>(lhs) - std::any_cast<unsigned long>(rhs);
 }
@@ -498,7 +493,7 @@ std::any multiply_unsignedlong_int(std::shared_ptr<interpreter> i, std::any& lhs
 {
 	return std::any_cast<unsigned long>(lhs) * std::any_cast<int>(rhs);
 }
-std::any multiply_unsignedlong_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any multiply_unsignedlong_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<unsigned long>(lhs) * std::any_cast<unsigned long>(rhs);
 }
@@ -531,7 +526,7 @@ std::any divide_unsignedlong_int(std::shared_ptr<interpreter> i, std::any& lhs, 
 	}
 	return std::any_cast<unsigned long>(lhs) / rhsVal;
 }
-std::any divide_unsignedlong_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any divide_unsignedlong_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	auto rhsVal = std::any_cast<unsigned long>(rhs);
 	if (rhsVal == 0) {
@@ -576,7 +571,7 @@ std::any index_unsignedlong_int(std::shared_ptr<interpreter> i, std::any& lhs, s
 {
 	throw ProgramException("unsupported operation", location());
 }
-std::any index_unsignedlong_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any index_unsignedlong_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	throw ProgramException("unsupported operation", location());
 }
@@ -605,7 +600,7 @@ std::any lessthan_unsignedlong_int(std::shared_ptr<interpreter> i, std::any& lhs
 {
 	return std::any_cast<unsigned long>(lhs) < std::any_cast<int>(rhs);
 }
-std::any lessthan_unsignedlong_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any lessthan_unsignedlong_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<unsigned long>(lhs) < std::any_cast<unsigned long>(rhs);
 }
@@ -634,7 +629,7 @@ std::any lessthanequal_unsignedlong_int(std::shared_ptr<interpreter> i, std::any
 {
 	return std::any_cast<unsigned long>(lhs) <= std::any_cast<int>(rhs);
 }
-std::any lessthanequal_unsignedlong_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any lessthanequal_unsignedlong_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<unsigned long>(lhs) <= std::any_cast<unsigned long>(rhs);
 }
@@ -663,7 +658,7 @@ std::any greaterthan_unsignedlong_int(std::shared_ptr<interpreter> i, std::any& 
 {
 	return std::any_cast<unsigned long>(lhs) > std::any_cast<int>(rhs);
 }
-std::any greaterthan_unsignedlong_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any greaterthan_unsignedlong_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<unsigned long>(lhs) > std::any_cast<unsigned long>(rhs);
 }
@@ -692,7 +687,7 @@ std::any greaterthanequal_unsignedlong_int(std::shared_ptr<interpreter> i, std::
 {
 	return std::any_cast<unsigned long>(lhs) >= std::any_cast<int>(rhs);
 }
-std::any greaterthanequal_unsignedlong_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any greaterthanequal_unsignedlong_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<unsigned long>(lhs) >= std::any_cast<unsigned long>(rhs);
 }
@@ -721,7 +716,7 @@ std::any equalequal_unsignedlong_int(std::shared_ptr<interpreter> i, std::any& l
 {
 	return std::any_cast<unsigned long>(lhs) == std::any_cast<int>(rhs);
 }
-std::any equalequal_unsignedlong_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any equalequal_unsignedlong_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<unsigned long>(lhs) == std::any_cast<unsigned long>(rhs);
 }
@@ -750,7 +745,7 @@ std::any notequal_unsignedlong_int(std::shared_ptr<interpreter> i, std::any& lhs
 {
 	return std::any_cast<unsigned long>(lhs) != std::any_cast<int>(rhs);
 }
-std::any notequal_unsignedlong_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any notequal_unsignedlong_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<unsigned long>(lhs) != std::any_cast<unsigned long>(rhs);
 }
@@ -806,7 +801,7 @@ std::any add_float_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& 
 {
 	return std::any_cast<float>(lhs) + std::any_cast<int>(rhs);
 }
-std::any add_float_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any add_float_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<float>(lhs) + std::any_cast<unsigned long>(rhs);
 }
@@ -835,7 +830,7 @@ std::any subtract_float_int(std::shared_ptr<interpreter> i, std::any& lhs, std::
 {
 	return std::any_cast<float>(lhs) - std::any_cast<int>(rhs);
 }
-std::any subtract_float_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any subtract_float_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<float>(lhs) - std::any_cast<unsigned long>(rhs);
 }
@@ -864,7 +859,7 @@ std::any multiply_float_int(std::shared_ptr<interpreter> i, std::any& lhs, std::
 {
 	return std::any_cast<float>(lhs) * std::any_cast<int>(rhs);
 }
-std::any multiply_float_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any multiply_float_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<float>(lhs) * std::any_cast<unsigned long>(rhs);
 }
@@ -897,7 +892,7 @@ std::any divide_float_int(std::shared_ptr<interpreter> i, std::any& lhs, std::an
 	}
 	return std::any_cast<float>(lhs) / rhsVal;
 }
-std::any divide_float_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any divide_float_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	auto rhsVal = std::any_cast<unsigned long>(rhs);
 	if (rhsVal == 0) {
@@ -942,7 +937,7 @@ std::any index_float_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any
 {
 	throw ProgramException("unsupported operation", location());
 }
-std::any index_float_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any index_float_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	throw ProgramException("unsupported operation", location());
 }
@@ -971,7 +966,7 @@ std::any lessthan_float_int(std::shared_ptr<interpreter> i, std::any& lhs, std::
 {
 	return std::any_cast<float>(lhs) < std::any_cast<int>(rhs);
 }
-std::any lessthan_float_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any lessthan_float_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<float>(lhs) < std::any_cast<unsigned long>(rhs);
 }
@@ -1000,7 +995,7 @@ std::any lessthanequal_float_int(std::shared_ptr<interpreter> i, std::any& lhs, 
 {
 	return std::any_cast<float>(lhs) <= std::any_cast<int>(rhs);
 }
-std::any lessthanequal_float_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any lessthanequal_float_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<float>(lhs) <= std::any_cast<unsigned long>(rhs);
 }
@@ -1029,7 +1024,7 @@ std::any greaterthan_float_int(std::shared_ptr<interpreter> i, std::any& lhs, st
 {
 	return std::any_cast<float>(lhs) > std::any_cast<int>(rhs);
 }
-std::any greaterthan_float_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any greaterthan_float_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<float>(lhs) > std::any_cast<unsigned long>(rhs);
 }
@@ -1058,7 +1053,7 @@ std::any greaterthanequal_float_int(std::shared_ptr<interpreter> i, std::any& lh
 {
 	return std::any_cast<float>(lhs) >= std::any_cast<int>(rhs);
 }
-std::any greaterthanequal_float_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any greaterthanequal_float_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<float>(lhs) >= std::any_cast<unsigned long>(rhs);
 }
@@ -1087,7 +1082,7 @@ std::any equalequal_float_int(std::shared_ptr<interpreter> i, std::any& lhs, std
 {
 	return std::any_cast<float>(lhs) == std::any_cast<int>(rhs);
 }
-std::any equalequal_float_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any equalequal_float_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<float>(lhs) == std::any_cast<unsigned long>(rhs);
 }
@@ -1116,7 +1111,7 @@ std::any notequal_float_int(std::shared_ptr<interpreter> i, std::any& lhs, std::
 {
 	return std::any_cast<float>(lhs) != std::any_cast<int>(rhs);
 }
-std::any notequal_float_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any notequal_float_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<float>(lhs) != std::any_cast<unsigned long>(rhs);
 }
@@ -1171,7 +1166,7 @@ std::any add_double_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any&
 {
 	return std::any_cast<double>(lhs) + std::any_cast<int>(rhs);
 }
-std::any add_double_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any add_double_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<double>(lhs) + std::any_cast<unsigned long>(rhs);
 }
@@ -1200,7 +1195,7 @@ std::any subtract_double_int(std::shared_ptr<interpreter> i, std::any& lhs, std:
 {
 	return std::any_cast<double>(lhs) - std::any_cast<int>(rhs);
 }
-std::any subtract_double_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any subtract_double_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<double>(lhs) - std::any_cast<unsigned long>(rhs);
 }
@@ -1229,7 +1224,7 @@ std::any multiply_double_int(std::shared_ptr<interpreter> i, std::any& lhs, std:
 {
 	return std::any_cast<double>(lhs) * std::any_cast<int>(rhs);
 }
-std::any multiply_double_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any multiply_double_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<double>(lhs) * std::any_cast<unsigned long>(rhs);
 }
@@ -1262,7 +1257,7 @@ std::any divide_double_int(std::shared_ptr<interpreter> i, std::any& lhs, std::a
 	}
 	return std::any_cast<double>(lhs) / rhsVal;
 }
-std::any divide_double_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any divide_double_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	auto rhsVal = std::any_cast<unsigned long>(rhs);
 	if (rhsVal == 0) {
@@ -1307,7 +1302,7 @@ std::any index_double_int(std::shared_ptr<interpreter> i, std::any& lhs, std::an
 {
 	throw ProgramException("unsupported operation", location());
 }
-std::any index_double_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any index_double_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	throw ProgramException("unsupported operation", location());
 }
@@ -1336,7 +1331,7 @@ std::any lessthan_double_int(std::shared_ptr<interpreter> i, std::any& lhs, std:
 {
 	return std::any_cast<double>(lhs) < std::any_cast<int>(rhs);
 }
-std::any lessthan_double_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any lessthan_double_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<double>(lhs) < std::any_cast<unsigned long>(rhs);
 }
@@ -1365,7 +1360,7 @@ std::any lessthanequal_double_int(std::shared_ptr<interpreter> i, std::any& lhs,
 {
 	return std::any_cast<double>(lhs) <= std::any_cast<int>(rhs);
 }
-std::any lessthanequal_double_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any lessthanequal_double_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<double>(lhs) <= std::any_cast<unsigned long>(rhs);
 }
@@ -1394,7 +1389,7 @@ std::any greaterthan_double_int(std::shared_ptr<interpreter> i, std::any& lhs, s
 {
 	return std::any_cast<double>(lhs) > std::any_cast<int>(rhs);
 }
-std::any greaterthan_double_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any greaterthan_double_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<double>(lhs) > std::any_cast<unsigned long>(rhs);
 }
@@ -1423,7 +1418,7 @@ std::any greaterthanequal_double_int(std::shared_ptr<interpreter> i, std::any& l
 {
 	return std::any_cast<double>(lhs) >= std::any_cast<int>(rhs);
 }
-std::any greaterthanequal_double_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any greaterthanequal_double_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<double>(lhs) >= std::any_cast<unsigned long>(rhs);
 }
@@ -1452,7 +1447,7 @@ std::any equalequal_double_int(std::shared_ptr<interpreter> i, std::any& lhs, st
 {
 	return std::any_cast<double>(lhs) == std::any_cast<int>(rhs);
 }
-std::any equalequal_double_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any equalequal_double_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<double>(lhs) == std::any_cast<unsigned long>(rhs);
 }
@@ -1481,7 +1476,7 @@ std::any notequal_double_int(std::shared_ptr<interpreter> i, std::any& lhs, std:
 {
 	return std::any_cast<double>(lhs) != std::any_cast<int>(rhs);
 }
-std::any notequal_double_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any notequal_double_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<double>(lhs) != std::any_cast<unsigned long>(rhs);
 }
@@ -1535,7 +1530,7 @@ std::any add_bool_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& r
 {
 	return std::any_cast<bool>(lhs) + std::any_cast<int>(rhs);
 }
-std::any add_bool_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any add_bool_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<bool>(lhs) + std::any_cast<unsigned long>(rhs);
 }
@@ -1564,7 +1559,7 @@ std::any subtract_bool_int(std::shared_ptr<interpreter> i, std::any& lhs, std::a
 {
 	return std::any_cast<bool>(lhs) - std::any_cast<int>(rhs);
 }
-std::any subtract_bool_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any subtract_bool_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<bool>(lhs) - std::any_cast<unsigned long>(rhs);
 }
@@ -1593,7 +1588,7 @@ std::any multiply_bool_int(std::shared_ptr<interpreter> i, std::any& lhs, std::a
 {
 	return std::any_cast<bool>(lhs) * std::any_cast<int>(rhs);
 }
-std::any multiply_bool_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any multiply_bool_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<bool>(lhs) * std::any_cast<unsigned long>(rhs);
 }
@@ -1626,7 +1621,7 @@ std::any divide_bool_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any
 	}
 	return std::any_cast<bool>(lhs) / rhsVal;
 }
-std::any divide_bool_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any divide_bool_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	auto rhsVal = std::any_cast<unsigned long>(rhs);
 	if (rhsVal == 0) {
@@ -1671,7 +1666,7 @@ std::any index_bool_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any&
 {
 	throw ProgramException("unsupported operation", location());
 }
-std::any index_bool_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any index_bool_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	throw ProgramException("unsupported operation", location());
 }
@@ -1700,7 +1695,7 @@ std::any lessthan_bool_int(std::shared_ptr<interpreter> i, std::any& lhs, std::a
 {
 	return std::any_cast<bool>(lhs) < std::any_cast<int>(rhs);
 }
-std::any lessthan_bool_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any lessthan_bool_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<bool>(lhs) < std::any_cast<unsigned long>(rhs);
 }
@@ -1729,7 +1724,7 @@ std::any lessthanequal_bool_int(std::shared_ptr<interpreter> i, std::any& lhs, s
 {
 	return std::any_cast<bool>(lhs) <= std::any_cast<int>(rhs);
 }
-std::any lessthanequal_bool_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any lessthanequal_bool_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<bool>(lhs) <= std::any_cast<unsigned long>(rhs);
 }
@@ -1758,7 +1753,7 @@ std::any greaterthan_bool_int(std::shared_ptr<interpreter> i, std::any& lhs, std
 {
 	return std::any_cast<bool>(lhs) > std::any_cast<int>(rhs);
 }
-std::any greaterthan_bool_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any greaterthan_bool_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<bool>(lhs) > std::any_cast<unsigned long>(rhs);
 }
@@ -1787,7 +1782,7 @@ std::any greaterthanequal_bool_int(std::shared_ptr<interpreter> i, std::any& lhs
 {
 	return std::any_cast<bool>(lhs) >= std::any_cast<int>(rhs);
 }
-std::any greaterthanequal_bool_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any greaterthanequal_bool_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<bool>(lhs) >= std::any_cast<unsigned long>(rhs);
 }
@@ -1816,7 +1811,7 @@ std::any equalequal_bool_int(std::shared_ptr<interpreter> i, std::any& lhs, std:
 {
 	return std::any_cast<bool>(lhs) == std::any_cast<int>(rhs);
 }
-std::any equalequal_bool_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any equalequal_bool_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<bool>(lhs) == std::any_cast<unsigned long>(rhs);
 }
@@ -1845,7 +1840,7 @@ std::any notequal_bool_int(std::shared_ptr<interpreter> i, std::any& lhs, std::a
 {
 	return std::any_cast<bool>(lhs) != std::any_cast<int>(rhs);
 }
-std::any notequal_bool_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any notequal_bool_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<bool>(lhs) != std::any_cast<unsigned long>(rhs);
 }
@@ -1882,11 +1877,11 @@ std::any notequal_bool_string(std::shared_ptr<interpreter> i, std::any& lhs, std
 */
 
 
-std::any not_int(std::shared_ptr<interpreter> i, std::any& rhs)
+std::any not_string(std::shared_ptr<interpreter> i, std::any& rhs)
 {
 	return !Utilities().isTruthy(rhs);
 }
-std::any negate_int(std::shared_ptr<interpreter> i, std::any& rhs)
+std::any negate_string(std::shared_ptr<interpreter> i, std::any& rhs)
 {
 	throw ProgramException("unsupported operation", location());
 }
@@ -1899,7 +1894,7 @@ std::any add_string_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any&
 {
 	return std::any_cast<std::string>(lhs) + std::to_string(std::any_cast<int>(rhs));
 }
-std::any add_string_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any add_string_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	return std::any_cast<std::string>(lhs) + std::to_string(std::any_cast<unsigned long>(rhs));
 }
@@ -1928,7 +1923,7 @@ std::any subtract_string_int(std::shared_ptr<interpreter> i, std::any& lhs, std:
 {
 	throw ProgramException("unsupported operation", location());
 }
-std::any subtract_string_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any subtract_string_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	throw ProgramException("unsupported operation", location());
 }
@@ -1957,7 +1952,7 @@ std::any multiply_string_int(std::shared_ptr<interpreter> i, std::any& lhs, std:
 {
 	throw ProgramException("unsupported operation", location());
 }
-std::any multiply_string_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any multiply_string_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	throw ProgramException("unsupported operation", location());
 }
@@ -1986,7 +1981,7 @@ std::any divide_string_int(std::shared_ptr<interpreter> i, std::any& lhs, std::a
 {
 	throw ProgramException("unsupported operation", location());
 }
-std::any divide_string_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any divide_string_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	throw ProgramException("unsupported operation", location());
 }
@@ -2021,7 +2016,7 @@ std::any index_string_int(std::shared_ptr<interpreter> i, std::any& lhs, std::an
 	}
 	throw ProgramException("string index out of range", location());
 }
-std::any index_string_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any index_string_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	std::string lhsVal = std::any_cast<std::string>(lhs);
 	unsigned long rhsVal = std::any_cast<unsigned long>(rhs);
@@ -2057,7 +2052,7 @@ std::any lessthan_string_int(std::shared_ptr<interpreter> i, std::any& lhs, std:
 	throw ProgramException("unsupported operation", location());
 }
 
-std::any lessthan_string_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any lessthan_string_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	throw ProgramException("unsupported operation", location());
 }
@@ -2091,7 +2086,7 @@ std::any lessthanequal_string_int(std::shared_ptr<interpreter> i, std::any& lhs,
 	throw ProgramException("unsupported operation", location());
 }
 
-std::any lessthanequal_string_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any lessthanequal_string_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	throw ProgramException("unsupported operation", location());
 }
@@ -2126,7 +2121,7 @@ std::any greaterthan_string_int(std::shared_ptr<interpreter> i, std::any& lhs, s
 	throw ProgramException("unsupported operation", location());
 }
 
-std::any greaterthan_string_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any greaterthan_string_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	throw ProgramException("unsupported operation", location());
 }
@@ -2160,7 +2155,7 @@ std::any greaterthanequal_string_int(std::shared_ptr<interpreter> i, std::any& l
 	throw ProgramException("unsupported operation", location());
 }
 
-std::any greaterthanequal_string_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any greaterthanequal_string_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	throw ProgramException("unsupported operation", location());
 }
@@ -2193,7 +2188,7 @@ std::any equalequal_string_int(std::shared_ptr<interpreter> i, std::any& lhs, st
 {
 	throw ProgramException("unsupported operation", location());
 }
-std::any equalequal_string_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any equalequal_string_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	throw ProgramException("unsupported operation", location());
 }
@@ -2222,7 +2217,7 @@ std::any notequal_string_int(std::shared_ptr<interpreter> i, std::any& lhs, std:
 {
 	throw ProgramException("unsupported operation", location());
 }
-std::any notequal_string_unsigned_long(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+std::any notequal_string_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	throw ProgramException("unsupported operation", location());
 }

@@ -18,6 +18,7 @@
 #include "klass_instance.h"
 
 #include "operators.h"
+#include "stdlib.h"
 #include "db_framework.h"
 
 
@@ -103,9 +104,6 @@ public:
 		db_env_ar->environment->define("db",
 			std::make_shared<db_helper>(),
 			true);
-		db_env_ar->environment->define("table_example",
-			std::make_shared<native_fn>("table_example", db_table_create),
-			true);
 
 
 		e->define("Database", 
@@ -138,13 +136,25 @@ public:
 		);
 
 		opHandler->registerOperator(
-			std::make_shared<binary_fn>("<", less_than_int_int)
+			std::make_shared<binary_fn>("+", add_string_string)
+			->registerParameter(BuildParameter<std::string>())
+			->registerParameter(BuildParameter<std::string>())
+		);
+
+		opHandler->registerOperator(
+			std::make_shared<binary_fn>("<", lessthan_int_int)
 			->registerParameter(BuildParameter<int>())
 			->registerParameter(BuildParameter<int>())
 		);
 
 		opHandler->registerOperator(
-			std::make_shared<binary_fn>("<", less_than_int_int)
+			std::make_shared<binary_fn>("<", lessthan_int_unsignedlong)
+			->registerParameter(BuildParameter<int>())
+			->registerParameter(BuildParameter<unsigned long>())
+		);
+
+		opHandler->registerOperator(
+			std::make_shared<binary_fn>("<=", lessthanequal_int_int)
 			->registerParameter(BuildParameter<int>())
 			->registerParameter(BuildParameter<int>())
 		);
@@ -156,7 +166,7 @@ public:
 		);
 
 		opHandler->registerOperator(
-			std::make_shared<binary_fn>("[", index_list_unsigned_long)
+			std::make_shared<binary_fn>("[", index_list_unsignedlong)
 			->registerParameter(BuildParameter<klass_definition>("", "list"))
 			->registerParameter(BuildParameter<unsigned long>())
 		);
@@ -165,8 +175,1868 @@ public:
 			->registerParameter(BuildParameter<klass_definition>("", "list"))
 			->registerParameter(BuildParameter<std::string>())
 		);
+
+
+        opHandler->registerOperator(
+            std::make_shared<unary_fn>("!", not_int)
+            ->registerParameter(BuildParameter<int>())
+        );
+
+		/* Auto Generated using op_create.txt */
+
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_int_int)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_int_unsignedlong)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_int_float)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_int_double)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_int_bool)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_int_string)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_unsignedlong_int)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_unsignedlong_unsignedlong)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_unsignedlong_float)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_unsignedlong_double)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_unsignedlong_bool)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_unsignedlong_string)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_float_int)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_float_unsignedlong)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_float_float)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_float_double)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_float_bool)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_float_string)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_double_int)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_double_unsignedlong)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_double_float)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_double_double)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_double_bool)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_double_string)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_bool_int)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_bool_unsignedlong)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_bool_float)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_bool_double)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_bool_bool)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_bool_string)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_string_int)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_string_unsignedlong)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_string_float)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_string_double)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_string_bool)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("+", add_string_string)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_int_int)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_int_unsignedlong)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_int_float)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_int_double)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_int_bool)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_int_string)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_unsignedlong_int)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_unsignedlong_unsignedlong)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_unsignedlong_float)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_unsignedlong_double)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_unsignedlong_bool)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_unsignedlong_string)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_float_int)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_float_unsignedlong)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_float_float)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_float_double)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_float_bool)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_float_string)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_double_int)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_double_unsignedlong)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_double_float)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_double_double)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_double_bool)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_double_string)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_bool_int)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_bool_unsignedlong)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_bool_float)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_bool_double)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_bool_bool)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_bool_string)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_string_int)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_string_unsignedlong)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_string_float)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_string_double)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_string_bool)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("-", subtract_string_string)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_int_int)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_int_unsignedlong)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_int_float)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_int_double)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_int_bool)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_int_string)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_unsignedlong_int)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_unsignedlong_unsignedlong)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_unsignedlong_float)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_unsignedlong_double)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_unsignedlong_bool)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_unsignedlong_string)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_float_int)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_float_unsignedlong)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_float_float)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_float_double)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_float_bool)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_float_string)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_double_int)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_double_unsignedlong)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_double_float)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_double_double)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_double_bool)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_double_string)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_bool_int)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_bool_unsignedlong)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_bool_float)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_bool_double)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_bool_bool)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_bool_string)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_string_int)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_string_unsignedlong)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_string_float)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_string_double)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_string_bool)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("*", multiply_string_string)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_int_int)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_int_unsignedlong)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_int_float)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_int_double)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_int_bool)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_int_string)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_unsignedlong_int)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_unsignedlong_unsignedlong)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_unsignedlong_float)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_unsignedlong_double)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_unsignedlong_bool)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_unsignedlong_string)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_float_int)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_float_unsignedlong)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_float_float)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_float_double)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_float_bool)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_float_string)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_double_int)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_double_unsignedlong)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_double_float)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_double_double)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_double_bool)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_double_string)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_bool_int)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_bool_unsignedlong)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_bool_float)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_bool_double)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_bool_bool)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_bool_string)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_string_int)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_string_unsignedlong)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_string_float)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_string_double)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_string_bool)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("\\", divide_string_string)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_int_int)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_int_unsignedlong)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_int_float)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_int_double)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_int_bool)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_int_string)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_unsignedlong_int)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_unsignedlong_unsignedlong)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_unsignedlong_float)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_unsignedlong_double)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_unsignedlong_bool)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_unsignedlong_string)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_float_int)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_float_unsignedlong)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_float_float)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_float_double)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_float_bool)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_float_string)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_double_int)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_double_unsignedlong)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_double_float)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_double_double)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_double_bool)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_double_string)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_bool_int)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_bool_unsignedlong)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_bool_float)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_bool_double)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_bool_bool)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_bool_string)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_string_int)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_string_unsignedlong)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_string_float)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_string_double)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_string_bool)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<", lessthan_string_string)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_int_int)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_int_unsignedlong)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_int_float)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_int_double)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_int_bool)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_int_string)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_unsignedlong_int)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_unsignedlong_unsignedlong)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_unsignedlong_float)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_unsignedlong_double)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_unsignedlong_bool)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_unsignedlong_string)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_float_int)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_float_unsignedlong)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_float_float)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_float_double)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_float_bool)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_float_string)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_double_int)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_double_unsignedlong)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_double_float)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_double_double)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_double_bool)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_double_string)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_bool_int)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_bool_unsignedlong)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_bool_float)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_bool_double)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_bool_bool)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_bool_string)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_string_int)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_string_unsignedlong)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_string_float)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_string_double)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_string_bool)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("<=", lessthanequal_string_string)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_int_int)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_int_unsignedlong)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_int_float)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_int_double)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_int_bool)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_int_string)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_unsignedlong_int)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_unsignedlong_unsignedlong)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_unsignedlong_float)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_unsignedlong_double)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_unsignedlong_bool)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_unsignedlong_string)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_float_int)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_float_unsignedlong)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_float_float)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_float_double)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_float_bool)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_float_string)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_double_int)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_double_unsignedlong)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_double_float)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_double_double)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_double_bool)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_double_string)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_bool_int)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_bool_unsignedlong)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_bool_float)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_bool_double)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_bool_bool)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_bool_string)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_string_int)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_string_unsignedlong)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_string_float)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_string_double)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_string_bool)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">", greaterthan_string_string)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_int_int)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_int_unsignedlong)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_int_float)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_int_double)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_int_bool)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_int_string)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_unsignedlong_int)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_unsignedlong_unsignedlong)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_unsignedlong_float)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_unsignedlong_double)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_unsignedlong_bool)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_unsignedlong_string)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_float_int)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_float_unsignedlong)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_float_float)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_float_double)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_float_bool)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_float_string)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_double_int)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_double_unsignedlong)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_double_float)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_double_double)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_double_bool)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_double_string)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_bool_int)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_bool_unsignedlong)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_bool_float)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_bool_double)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_bool_bool)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_bool_string)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_string_int)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_string_unsignedlong)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_string_float)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_string_double)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_string_bool)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>(">=", greaterthanequal_string_string)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_int_int)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_int_unsignedlong)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_int_float)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_int_double)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_int_bool)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_int_string)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_unsignedlong_int)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_unsignedlong_unsignedlong)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_unsignedlong_float)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_unsignedlong_double)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_unsignedlong_bool)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_unsignedlong_string)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_float_int)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_float_unsignedlong)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_float_float)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_float_double)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_float_bool)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_float_string)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_double_int)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_double_unsignedlong)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_double_float)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_double_double)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_double_bool)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_double_string)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_bool_int)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_bool_unsignedlong)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_bool_float)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_bool_double)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_bool_bool)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_bool_string)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_string_int)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_string_unsignedlong)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_string_float)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_string_double)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_string_bool)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("==", equalequal_string_string)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_int_int)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_int_unsignedlong)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_int_float)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_int_double)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_int_bool)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_int_string)
+            ->registerParameter(BuildParameter<int>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_unsignedlong_int)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_unsignedlong_unsignedlong)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_unsignedlong_float)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_unsignedlong_double)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_unsignedlong_bool)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_unsignedlong_string)
+            ->registerParameter(BuildParameter<unsigned long>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_float_int)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_float_unsignedlong)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_float_float)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_float_double)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_float_bool)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_float_string)
+            ->registerParameter(BuildParameter<float>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_double_int)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_double_unsignedlong)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_double_float)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_double_double)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_double_bool)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_double_string)
+            ->registerParameter(BuildParameter<double>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_bool_int)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_bool_unsignedlong)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_bool_float)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_bool_double)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_bool_bool)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_bool_string)
+            ->registerParameter(BuildParameter<bool>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_string_int)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_string_unsignedlong)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_string_float)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_string_double)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_string_bool)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<binary_fn>("!=", notequal_string_string)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<unary_fn>("!", not_int)
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<unary_fn>("!", not_unsignedlong)
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<unary_fn>("!", not_float)
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<unary_fn>("!", not_double)
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<unary_fn>("!", not_bool)
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<unary_fn>("!", not_string)
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<unary_fn>("-", negate_int)
+            ->registerParameter(BuildParameter<int>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<unary_fn>("-", negate_unsignedlong)
+            ->registerParameter(BuildParameter<unsigned long>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<unary_fn>("-", negate_float)
+            ->registerParameter(BuildParameter<float>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<unary_fn>("-", negate_double)
+            ->registerParameter(BuildParameter<double>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<unary_fn>("-", negate_bool)
+            ->registerParameter(BuildParameter<bool>())
+        );
+        opHandler->registerOperator(
+            std::make_shared<unary_fn>("-", negate_string)
+            ->registerParameter(BuildParameter<std::string>())
+        );
+
 		
 
+		/* End Auto Generation */
+		
 		return opHandler;
 	}
 
@@ -227,6 +2097,8 @@ public:
 			
 			tokenizer_rule(Keywords().NEW(), "new"),
 			tokenizer_rule(TOKEN_TYPE_EOL_COMMENT, "//"),
+            tokenizer_rule(TOKEN_TYPE_ML_COMMENT_START, "/*"),
+            tokenizer_rule(TOKEN_TYPE_ML_COMMENT_ENCLOSING, "*/"),
 			tokenizer_rule(TOKEN_TYPE_STRING_ENCLOSING, "\""),
 			tokenizer_rule(Keywords().IMPORT(), "import"),
 			tokenizer_rule(Keywords().DIRECTIVE(), "@"),

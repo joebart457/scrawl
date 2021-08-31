@@ -7,6 +7,7 @@
 #include "parser.h"
 
 #include "ContextBuilder.h"
+#include "ufhndl.hpp"
 
 int main(int argc, char** argv)
 {

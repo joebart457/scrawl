@@ -48,6 +48,9 @@ std::string Utilities::stringify(const std::any& obj)
 	else if (obj.type() == typeid(klass_instance)) {
 		oss << std::any_cast<klass_instance>(obj).toString();
 	}
+	else if (obj.type() == typeid(nullptr)) {
+		oss << "<null>";
+	}
 	else {
 		oss << "<object>";
 	}
