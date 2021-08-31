@@ -294,6 +294,36 @@ void interpreter::acceptSwitchStatement(std::shared_ptr<switch_statement> switch
 }
 
 
+void interpreter::acceptRunRecoverStatement(std::shared_ptr<run_recover_statement> rr_stmt)
+{
+	try {
+		acceptStatement(rr_stmt->m_try);
+	}
+	catch (PanicException err) {
+		std::any val = err.value();
+		std::string type = val.type().name();
+		if (val.type() == typeid(klass_instance)) {
+			type = std::any_cast<klass_instance>(val).getType();
+		}
+		if (rr_stmt->m_szTypename != "" && type != rr_stmt->m_szTypename) {
+			throw err;
+		}
+		else {
+			if (rr_stmt->m_szName != "") {
+				m_context->define(rr_stmt->m_szName, val, false, rr_stmt->getLocation());
+			}
+		}
+	}
+}
+
+void interpreter::acceptPanicStatement(std::shared_ptr<panic_statement> panic_stmt)
+{
+	std::any val = acceptExpression(panic_stmt->m_expr);
+	throw PanicException(val, panic_stmt->m_loc);
+}
+
+
+
 void interpreter::acceptExpressionStatement(std::shared_ptr<expression_statement> expr_stmt)
 {
 	acceptExpression(expr_stmt->m_expr);

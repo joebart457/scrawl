@@ -72,3 +72,9 @@ void switch_statement::accept(std::shared_ptr<interpreter> i)
 {
 	i->acceptSwitchStatement(std::static_pointer_cast<switch_statement>(shared_from_this()));
 }
+
+
+void run_recover_statement::accept(std::shared_ptr<interpreter> i)
+{
+	i->acceptRunRecoverStatement(std::static_pointer_cast<run_recover_statement>(shared_from_this()));
+}

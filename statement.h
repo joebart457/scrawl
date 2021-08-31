@@ -86,7 +86,7 @@ class variable_declaration :
 	public statement {
 	friend class interpreter;
 public:
-	variable_declaration(const std::string& szTypename, const std::string szName, std::shared_ptr<expression> value, const location& loc)
+	variable_declaration(const std::string& szTypename, const std::string& szName, std::shared_ptr<expression> value, const location& loc)
 		:statement("variable_declaration", loc), m_szTypename{ szTypename }, m_szName{ szName }, m_value{ value }{}
 	~variable_declaration(){}
 
@@ -234,4 +234,24 @@ public:
 private:
 	std::shared_ptr<expression> m_testValue{ nullptr };
 	std::vector<switch_case> m_cases;
+};
+
+
+
+class run_recover_statement :
+	public statement {
+	friend class interpreter;
+public:
+	run_recover_statement(std::shared_ptr<statement> run,
+		const std::string& szTypename, 
+		const std::string& szName,
+		const location& loc)
+		:statement("run_recover_statement", loc), m_try{ run }, m_szTypename{ szTypename }, m_szName{ szName } {}
+	~run_recover_statement() {}
+
+	virtual void accept(std::shared_ptr<interpreter> i);
+private:
+	std::shared_ptr<statement> m_try{ nullptr };
+	std::string m_szTypename{ "" };
+	std::string m_szName{ "" };
 };

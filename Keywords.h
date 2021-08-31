@@ -13,8 +13,9 @@ public:
 	static std::string CASE() { return "case"; }
 	static std::string DEFAULT() { return "default"; }
 
-	static std::string TRY() { return "try"; }
-	static std::string CATCH() { return "catch"; }
+	static std::string RUN() { return "run"; }
+	static std::string RECOVER() { return "recover"; }
+	static std::string ON() { return "on"; }
 
 	static std::string UINT() { return "uint"; }
 	static std::string INT() { return "int"; }

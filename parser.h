@@ -96,6 +96,9 @@ public:
 			m_pi.consume(Keywords().SEMI(), "expect ';' after 'break'");
 			return std::make_shared<break_statement>(tok.loc());
 		}
+		if (m_pi.match(Keywords().RUN())) {
+			return parse_block();
+		}
 		if (m_pi.match(Keywords().LCURLY())) {
 			return parse_block();
 		}
@@ -131,7 +134,12 @@ public:
 		if (match_variable_declaration()) {
 			return parse_variable_declaration();
 		}
-
+		if (m_pi.match(Keywords().RUN())) {
+			return parse_block();
+		}
+		if (m_pi.match(Keywords().SWITCH())) {
+			return parse_switch();
+		}
 		return parse_expression_stmt();
 	}
 
@@ -273,6 +281,29 @@ public:
 			expr = std::make_shared<primary>(nullptr, tok.loc());
 		}
 		return std::make_shared<return_statement>(expr, tok.loc());
+	}
+
+	std::shared_ptr<run_recover_statement> parse_run_recover()
+	{
+		token tok = m_pi.previous();
+		std::shared_ptr<statement> run = parse_statement();
+		m_pi.consume(Keywords().RECOVER(), "Expect recover clause.");
+		if (m_pi.match(Keywords().ON())){}
+		std::string type{ "" };
+		if (match_builtin()) {
+			type = m_pi.previous().lexeme();
+		}
+		else {
+			type = m_pi.consume(TOKEN_TYPE_WORD, "expect type specifier in declaration").lexeme();
+		}
+		std::string name{ "" };
+		if (m_pi.match(TOKEN_TYPE_WORD)) {
+			name = m_pi.previous().lexeme();
+		}
+
+		m_pi.consume(Keywords().SEMI(), "Expect ';' at end of recover statement.");
+
+		return std::make_shared<run_recover_statement>(run, type, name, tok.loc());
 	}
 
 

@@ -96,3 +96,16 @@ public:
 protected:
 	std::any m_value;
 };
+
+class PanicException :
+	public ProgramException {
+public:
+	PanicException(std::any val, const location& loc)
+		:ProgramException("PanicException", "", loc, Severity().LOW()), m_value{ val }{}
+	~PanicException() {}
+
+	std::any value() { return m_value; }
+
+protected:
+	std::any m_value;
+};
