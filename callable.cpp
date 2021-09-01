@@ -7,6 +7,7 @@
 #include "context.h"
 #include "interpreter.h"
 #include "exceptions.h"
+#include "Utilities.h"
 
 
 std::string callable::getSignature()
@@ -29,7 +30,7 @@ std::string callable::getSignature()
 
 std::any native_fn::call(std::shared_ptr<interpreter> c, _args args)
 {
-	std::shared_ptr<execution_context> context = fetch_context(c);
+	std::shared_ptr<execution_context> context = Utilities().fetch_context(c);
 	
 	std::any ret = nullptr;
 	context->push_ar(m_enclosing);
@@ -120,9 +121,8 @@ std::shared_ptr<native_fn> native_fn::registerParameter(const param& p)
 
 std::any custom_fn::call(std::shared_ptr<interpreter> c, _args arguments)
 {
-	check_context(c);
-	std::shared_ptr<execution_context> context = c->get_context();
-	check_context(context);
+
+	std::shared_ptr<execution_context> context = Utilities().fetch_context(c); // Also checks that c is not nullptr
 
 	// Create closure
 	context->push_ar(m_enclosing);
@@ -190,7 +190,7 @@ void custom_fn::setEnclosing(std::shared_ptr<activation_record> ar)
 
 std::any unary_fn::call(std::shared_ptr<interpreter> c, _args args)
 {
-	check_context(c);
+	Utilities().check_context(c);
 	if (args.size() != 1) {
 		throw ProgramException("parity_mismatch", "expected 1 argument but got " + std::to_string(args.size()), location());
 	}
@@ -218,7 +218,7 @@ std::string unary_fn::getSignature()
 
 std::any binary_fn::call(std::shared_ptr<interpreter> c,  _args args)
 {
-	check_context(c);
+	Utilities().check_context(c);
 	if (args.size() != m_params.size() || m_params.size() != 2) {
 		throw ProgramException("parity_mismatch", "expected 2 arguments but got " + std::to_string(args.size()), location());
 	}

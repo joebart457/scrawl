@@ -13,7 +13,8 @@
 #include "location.h"
 #include "exceptions.h"
 #include "callable.h"
-
+#include "OperatorHandler.h"
+#include "Utilities.h"
 
 struct activation_record {
 	unsigned int id{ 0 };
@@ -25,9 +26,13 @@ struct activation_record {
 
 class execution_context {
 public:
-	execution_context(std::shared_ptr<activation_record> ar)
+	execution_context(std::shared_ptr<activation_record> ar, std::shared_ptr<OperatorHandler> opHandler)
+		:m_opHandler{ opHandler }
 	{
 		push_ar(ar);
+		if (m_opHandler == nullptr) {
+			m_opHandler = std::make_shared<OperatorHandler>();
+		}
 	}
 	~execution_context() {}
 
@@ -147,7 +152,7 @@ public:
 	execution_context top()
 	{
 		rlist_crawler<std::shared_ptr<activation_record>> crawler(m_records);
-		return execution_context({ crawler.back() });
+		return execution_context({ crawler.back() }, m_opHandler);
 	}
 
 
@@ -179,6 +184,17 @@ public:
 		return m_records.at(m_records.size() - 1);
 	}
 
+
+	std::shared_ptr<callable> getOperator(const std::string& szName)
+	{
+		return m_opHandler->getOperator(szName);
+	}
+
+	std::shared_ptr<callable> getOperator(const std::string& szName, std::vector<std::any> args)
+	{
+		return m_opHandler->getOperator(Utilities().createOperatorSignature(szName, args));
+	}
+
 private:
 
 	std::string toString(const activation_record& ar, const std::string& exclude = "")
@@ -192,8 +208,7 @@ private:
 
 	unsigned int m_index{ 0 };
 	std::vector<std::shared_ptr<activation_record>> m_records;
+	std::shared_ptr<OperatorHandler> m_opHandler{ nullptr };
 };
-
-
 
 #endif

@@ -115,7 +115,7 @@ public:
 
 	static std::shared_ptr<interpreter> BuildInterpreter()
 	{
-		return std::make_shared<interpreter>(BuildExecutionContext(), BuildOperatorHandler());
+		return std::make_shared<interpreter>(BuildExecutionContext());
 	}
 
 	static std::shared_ptr<execution_context> BuildExecutionContext() 
@@ -123,7 +123,7 @@ public:
 		std::shared_ptr<activation_record> default_ar = std::make_shared<activation_record>();
 		default_ar->id = 0;
 		default_ar->environment = BuildDefaultScope();
-		return std::make_shared<execution_context>(default_ar);
+		return std::make_shared<execution_context>(default_ar, BuildOperatorHandler());
 	}
 
 	static std::shared_ptr<OperatorHandler> BuildOperatorHandler()

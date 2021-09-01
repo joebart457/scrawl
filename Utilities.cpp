@@ -4,6 +4,30 @@
 
 #include "callable.h"
 #include "klass_instance.h"
+#include "interpreter.h"
+
+
+void Utilities::check_context(std::shared_ptr<interpreter> i)
+{
+	if (i == nullptr) {
+		location loc;
+		throw ProgramException("cannot execute code using null interpreter", loc, Severity().FATAL());
+	}
+}
+
+std::shared_ptr<execution_context> Utilities::fetch_context(std::shared_ptr<interpreter> i)
+{
+	std::shared_ptr<execution_context> context_ptr = nullptr;
+	if (i != nullptr) {
+		context_ptr = i->get_context();
+	}
+	if (i == nullptr || context_ptr == nullptr) {
+		location loc;
+		throw ProgramException("cannot execute code in null context", loc, Severity().FATAL());
+	}
+	return context_ptr;
+}
+
 
 std::string Utilities::stringify(const std::any& obj)
 {
@@ -81,4 +105,58 @@ bool Utilities::isTruthy(const std::any& obj)
 	}
 
 	throw ProgramException("Unsupported object type '" + std::string(obj.type().name()), location());
+}
+
+
+std::string Utilities::createOperatorSignature(const std::string& szName, std::vector<std::any> args)
+{
+	std::ostringstream oss;
+	oss << szName << "(";
+	if (args.size() > 0) {
+		std::string type_name = args.at(0).type().name();
+		if (args.at(0).type() == typeid(klass_instance)) {
+			type_name = std::any_cast<klass_instance>(args.at(0)).getType();
+		}
+		oss << type_name;
+	}
+	for (unsigned int i{ 1 }; i < args.size(); i++) {
+		std::string type_name = args.at(i).type().name();
+		if (args.at(i).type() == typeid(klass_instance)) {
+			type_name = std::any_cast<klass_instance>(args.at(i)).getType();
+		}
+		oss << "," << type_name;
+	}
+	oss << ")";
+	return oss.str();
+}
+
+
+std::shared_ptr<callable> Utilities::getCallable(std::any callee) {
+	if (callee.type() == typeid(std::shared_ptr<callable>)) {
+		return std::any_cast<std::shared_ptr<callable>>(callee);
+	}
+	else if (callee.type() == typeid(std::shared_ptr<native_fn>)) {
+		return std::any_cast<std::shared_ptr<native_fn>>(callee);
+	}
+	else if (callee.type() == typeid(std::shared_ptr<binary_fn>)) {
+		return std::any_cast<std::shared_ptr<binary_fn>>(callee);
+	}
+	else if (callee.type() == typeid(std::shared_ptr<unary_fn>)) {
+		return std::any_cast<std::shared_ptr<unary_fn>>(callee);
+	}
+	else if (callee.type() == typeid(std::shared_ptr<custom_fn>)) {
+		return std::any_cast<std::shared_ptr<custom_fn>>(callee);
+	}
+	else {
+		throw ProgramException("unable to convert type " + std::string(callee.type().name()) + " to callable type", location());
+	}
+}
+
+
+std::string Utilities::getTypeString(std::any& obj)
+{
+	if (obj.type() == typeid(klass_instance)) {
+		return std::any_cast<klass_instance>(obj).getType();
+	}
+	return obj.type().name();
 }

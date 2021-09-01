@@ -83,6 +83,8 @@ std::any index_string_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs
 }
 
 
+/* End Custom Defined Binary Operators */
+
 
 /* Auto Generated using op_create.scrwl */
 
@@ -213,7 +215,7 @@ std::any add_int_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any&
 
 std::any add_int_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<int>(lhs) + std::any_cast<bool>(rhs);
+    return std::any_cast<int>(lhs) + static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any add_int_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -249,7 +251,7 @@ std::any add_unsignedlong_double(std::shared_ptr<interpreter> i, std::any& lhs, 
 
 std::any add_unsignedlong_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<unsigned long>(lhs) + std::any_cast<bool>(rhs);
+    return std::any_cast<unsigned long>(lhs) + static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any add_unsignedlong_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -285,7 +287,7 @@ std::any add_float_double(std::shared_ptr<interpreter> i, std::any& lhs, std::an
 
 std::any add_float_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<float>(lhs) + std::any_cast<bool>(rhs);
+    return std::any_cast<float>(lhs) + static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any add_float_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -321,7 +323,7 @@ std::any add_double_double(std::shared_ptr<interpreter> i, std::any& lhs, std::a
 
 std::any add_double_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<double>(lhs) + std::any_cast<bool>(rhs);
+    return std::any_cast<double>(lhs) + static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any add_double_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -337,27 +339,27 @@ std::any add_double_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any
 
 std::any add_bool_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) + std::any_cast<int>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) + std::any_cast<int>(rhs);
 }
 
 std::any add_bool_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) + std::any_cast<unsigned long>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) + std::any_cast<unsigned long>(rhs);
 }
 
 std::any add_bool_float(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) + std::any_cast<float>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) + std::any_cast<float>(rhs);
 }
 
 std::any add_bool_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) + std::any_cast<double>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) + std::any_cast<double>(rhs);
 }
 
 std::any add_bool_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) + std::any_cast<bool>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) + static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any add_bool_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -479,7 +481,7 @@ std::any subtract_int_double(std::shared_ptr<interpreter> i, std::any& lhs, std:
 
 std::any subtract_int_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<int>(lhs) - std::any_cast<bool>(rhs);
+    return std::any_cast<int>(lhs) - static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any subtract_int_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -515,7 +517,7 @@ std::any subtract_unsignedlong_double(std::shared_ptr<interpreter> i, std::any& 
 
 std::any subtract_unsignedlong_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<unsigned long>(lhs) - std::any_cast<bool>(rhs);
+    return std::any_cast<unsigned long>(lhs) - static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any subtract_unsignedlong_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -551,7 +553,7 @@ std::any subtract_float_double(std::shared_ptr<interpreter> i, std::any& lhs, st
 
 std::any subtract_float_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<float>(lhs) - std::any_cast<bool>(rhs);
+    return std::any_cast<float>(lhs) - static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any subtract_float_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -587,7 +589,7 @@ std::any subtract_double_double(std::shared_ptr<interpreter> i, std::any& lhs, s
 
 std::any subtract_double_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<double>(lhs) - std::any_cast<bool>(rhs);
+    return std::any_cast<double>(lhs) - static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any subtract_double_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -603,27 +605,27 @@ std::any subtract_double_null(std::shared_ptr<interpreter> i, std::any& lhs, std
 
 std::any subtract_bool_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) - std::any_cast<int>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) - std::any_cast<int>(rhs);
 }
 
 std::any subtract_bool_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) - std::any_cast<unsigned long>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) - std::any_cast<unsigned long>(rhs);
 }
 
 std::any subtract_bool_float(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) - std::any_cast<float>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) - std::any_cast<float>(rhs);
 }
 
 std::any subtract_bool_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) - std::any_cast<double>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) - std::any_cast<double>(rhs);
 }
 
 std::any subtract_bool_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) - std::any_cast<bool>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) - static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any subtract_bool_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -745,7 +747,7 @@ std::any multiply_int_double(std::shared_ptr<interpreter> i, std::any& lhs, std:
 
 std::any multiply_int_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<int>(lhs) * std::any_cast<bool>(rhs);
+    return std::any_cast<int>(lhs) * static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any multiply_int_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -781,7 +783,7 @@ std::any multiply_unsignedlong_double(std::shared_ptr<interpreter> i, std::any& 
 
 std::any multiply_unsignedlong_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<unsigned long>(lhs) * std::any_cast<bool>(rhs);
+    return std::any_cast<unsigned long>(lhs) * static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any multiply_unsignedlong_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -817,7 +819,7 @@ std::any multiply_float_double(std::shared_ptr<interpreter> i, std::any& lhs, st
 
 std::any multiply_float_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<float>(lhs) * std::any_cast<bool>(rhs);
+    return std::any_cast<float>(lhs) * static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any multiply_float_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -853,7 +855,7 @@ std::any multiply_double_double(std::shared_ptr<interpreter> i, std::any& lhs, s
 
 std::any multiply_double_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<double>(lhs) * std::any_cast<bool>(rhs);
+    return std::any_cast<double>(lhs) * static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any multiply_double_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -869,27 +871,27 @@ std::any multiply_double_null(std::shared_ptr<interpreter> i, std::any& lhs, std
 
 std::any multiply_bool_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) * std::any_cast<int>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) * std::any_cast<int>(rhs);
 }
 
 std::any multiply_bool_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) * std::any_cast<unsigned long>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) * std::any_cast<unsigned long>(rhs);
 }
 
 std::any multiply_bool_float(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) * std::any_cast<float>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) * std::any_cast<float>(rhs);
 }
 
 std::any multiply_bool_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) * std::any_cast<double>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) * std::any_cast<double>(rhs);
 }
 
 std::any multiply_bool_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) * std::any_cast<bool>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) * static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any multiply_bool_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -1027,7 +1029,7 @@ std::any divide_int_double(std::shared_ptr<interpreter> i, std::any& lhs, std::a
 
 std::any divide_int_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    auto rhsVal = std::any_cast<bool>(rhs);
+    auto rhsVal = static_cast<int>(std::any_cast<bool>(rhs));
     if (rhsVal == 0) {
         throw ProgramException("unable to divide by 0", location());
     }
@@ -1083,7 +1085,7 @@ std::any divide_unsignedlong_double(std::shared_ptr<interpreter> i, std::any& lh
 
 std::any divide_unsignedlong_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    auto rhsVal = std::any_cast<bool>(rhs);
+    auto rhsVal = static_cast<int>(std::any_cast<bool>(rhs));
     if (rhsVal == 0) {
         throw ProgramException("unable to divide by 0", location());
     }
@@ -1139,7 +1141,7 @@ std::any divide_float_double(std::shared_ptr<interpreter> i, std::any& lhs, std:
 
 std::any divide_float_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    auto rhsVal = std::any_cast<bool>(rhs);
+    auto rhsVal = static_cast<int>(std::any_cast<bool>(rhs));
     if (rhsVal == 0) {
         throw ProgramException("unable to divide by 0", location());
     }
@@ -1195,7 +1197,7 @@ std::any divide_double_double(std::shared_ptr<interpreter> i, std::any& lhs, std
 
 std::any divide_double_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    auto rhsVal = std::any_cast<bool>(rhs);
+    auto rhsVal = static_cast<int>(std::any_cast<bool>(rhs));
     if (rhsVal == 0) {
         throw ProgramException("unable to divide by 0", location());
     }
@@ -1219,7 +1221,7 @@ std::any divide_bool_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any
     if (rhsVal == 0) {
         throw ProgramException("unable to divide by 0", location());
     }
-    return std::any_cast<bool>(lhs) / rhsVal;
+    return static_cast<int>(std::any_cast<bool>(lhs)) / rhsVal;
 }
 
 std::any divide_bool_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -1228,7 +1230,7 @@ std::any divide_bool_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs,
     if (rhsVal == 0) {
         throw ProgramException("unable to divide by 0", location());
     }
-    return std::any_cast<bool>(lhs) / rhsVal;
+    return static_cast<int>(std::any_cast<bool>(lhs)) / rhsVal;
 }
 
 std::any divide_bool_float(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -1237,7 +1239,7 @@ std::any divide_bool_float(std::shared_ptr<interpreter> i, std::any& lhs, std::a
     if (rhsVal == 0) {
         throw ProgramException("unable to divide by 0", location());
     }
-    return std::any_cast<bool>(lhs) / rhsVal;
+    return static_cast<int>(std::any_cast<bool>(lhs)) / rhsVal;
 }
 
 std::any divide_bool_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -1246,16 +1248,16 @@ std::any divide_bool_double(std::shared_ptr<interpreter> i, std::any& lhs, std::
     if (rhsVal == 0) {
         throw ProgramException("unable to divide by 0", location());
     }
-    return std::any_cast<bool>(lhs) / rhsVal;
+    return static_cast<int>(std::any_cast<bool>(lhs)) / rhsVal;
 }
 
 std::any divide_bool_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    auto rhsVal = std::any_cast<bool>(rhs);
+    auto rhsVal = static_cast<int>(std::any_cast<bool>(rhs));
     if (rhsVal == 0) {
         throw ProgramException("unable to divide by 0", location());
     }
-    return std::any_cast<bool>(lhs) / rhsVal;
+    return static_cast<int>(std::any_cast<bool>(lhs)) / rhsVal;
 }
 
 std::any divide_bool_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -1377,7 +1379,7 @@ std::any lessthan_int_double(std::shared_ptr<interpreter> i, std::any& lhs, std:
 
 std::any lessthan_int_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<int>(lhs) < std::any_cast<bool>(rhs);
+    return std::any_cast<int>(lhs) < static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any lessthan_int_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -1413,7 +1415,7 @@ std::any lessthan_unsignedlong_double(std::shared_ptr<interpreter> i, std::any& 
 
 std::any lessthan_unsignedlong_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<unsigned long>(lhs) < std::any_cast<bool>(rhs);
+    return std::any_cast<unsigned long>(lhs) < static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any lessthan_unsignedlong_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -1449,7 +1451,7 @@ std::any lessthan_float_double(std::shared_ptr<interpreter> i, std::any& lhs, st
 
 std::any lessthan_float_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<float>(lhs) < std::any_cast<bool>(rhs);
+    return std::any_cast<float>(lhs) < static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any lessthan_float_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -1485,7 +1487,7 @@ std::any lessthan_double_double(std::shared_ptr<interpreter> i, std::any& lhs, s
 
 std::any lessthan_double_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<double>(lhs) < std::any_cast<bool>(rhs);
+    return std::any_cast<double>(lhs) < static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any lessthan_double_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -1501,27 +1503,27 @@ std::any lessthan_double_null(std::shared_ptr<interpreter> i, std::any& lhs, std
 
 std::any lessthan_bool_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) < std::any_cast<int>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) < std::any_cast<int>(rhs);
 }
 
 std::any lessthan_bool_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) < std::any_cast<unsigned long>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) < std::any_cast<unsigned long>(rhs);
 }
 
 std::any lessthan_bool_float(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) < std::any_cast<float>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) < std::any_cast<float>(rhs);
 }
 
 std::any lessthan_bool_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) < std::any_cast<double>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) < std::any_cast<double>(rhs);
 }
 
 std::any lessthan_bool_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) < std::any_cast<bool>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) < static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any lessthan_bool_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -1643,7 +1645,7 @@ std::any lessthanequal_int_double(std::shared_ptr<interpreter> i, std::any& lhs,
 
 std::any lessthanequal_int_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<int>(lhs) <= std::any_cast<bool>(rhs);
+    return std::any_cast<int>(lhs) <= static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any lessthanequal_int_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -1679,7 +1681,7 @@ std::any lessthanequal_unsignedlong_double(std::shared_ptr<interpreter> i, std::
 
 std::any lessthanequal_unsignedlong_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<unsigned long>(lhs) <= std::any_cast<bool>(rhs);
+    return std::any_cast<unsigned long>(lhs) <= static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any lessthanequal_unsignedlong_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -1715,7 +1717,7 @@ std::any lessthanequal_float_double(std::shared_ptr<interpreter> i, std::any& lh
 
 std::any lessthanequal_float_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<float>(lhs) <= std::any_cast<bool>(rhs);
+    return std::any_cast<float>(lhs) <= static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any lessthanequal_float_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -1751,7 +1753,7 @@ std::any lessthanequal_double_double(std::shared_ptr<interpreter> i, std::any& l
 
 std::any lessthanequal_double_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<double>(lhs) <= std::any_cast<bool>(rhs);
+    return std::any_cast<double>(lhs) <= static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any lessthanequal_double_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -1767,27 +1769,27 @@ std::any lessthanequal_double_null(std::shared_ptr<interpreter> i, std::any& lhs
 
 std::any lessthanequal_bool_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) <= std::any_cast<int>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) <= std::any_cast<int>(rhs);
 }
 
 std::any lessthanequal_bool_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) <= std::any_cast<unsigned long>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) <= std::any_cast<unsigned long>(rhs);
 }
 
 std::any lessthanequal_bool_float(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) <= std::any_cast<float>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) <= std::any_cast<float>(rhs);
 }
 
 std::any lessthanequal_bool_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) <= std::any_cast<double>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) <= std::any_cast<double>(rhs);
 }
 
 std::any lessthanequal_bool_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) <= std::any_cast<bool>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) <= static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any lessthanequal_bool_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -1909,7 +1911,7 @@ std::any greaterthan_int_double(std::shared_ptr<interpreter> i, std::any& lhs, s
 
 std::any greaterthan_int_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<int>(lhs) > std::any_cast<bool>(rhs);
+    return std::any_cast<int>(lhs) > static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any greaterthan_int_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -1945,7 +1947,7 @@ std::any greaterthan_unsignedlong_double(std::shared_ptr<interpreter> i, std::an
 
 std::any greaterthan_unsignedlong_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<unsigned long>(lhs) > std::any_cast<bool>(rhs);
+    return std::any_cast<unsigned long>(lhs) > static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any greaterthan_unsignedlong_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -1981,7 +1983,7 @@ std::any greaterthan_float_double(std::shared_ptr<interpreter> i, std::any& lhs,
 
 std::any greaterthan_float_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<float>(lhs) > std::any_cast<bool>(rhs);
+    return std::any_cast<float>(lhs) > static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any greaterthan_float_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -2017,7 +2019,7 @@ std::any greaterthan_double_double(std::shared_ptr<interpreter> i, std::any& lhs
 
 std::any greaterthan_double_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<double>(lhs) > std::any_cast<bool>(rhs);
+    return std::any_cast<double>(lhs) > static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any greaterthan_double_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -2033,27 +2035,27 @@ std::any greaterthan_double_null(std::shared_ptr<interpreter> i, std::any& lhs, 
 
 std::any greaterthan_bool_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) > std::any_cast<int>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) > std::any_cast<int>(rhs);
 }
 
 std::any greaterthan_bool_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) > std::any_cast<unsigned long>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) > std::any_cast<unsigned long>(rhs);
 }
 
 std::any greaterthan_bool_float(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) > std::any_cast<float>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) > std::any_cast<float>(rhs);
 }
 
 std::any greaterthan_bool_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) > std::any_cast<double>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) > std::any_cast<double>(rhs);
 }
 
 std::any greaterthan_bool_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) > std::any_cast<bool>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) > static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any greaterthan_bool_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -2175,7 +2177,7 @@ std::any greaterthanequal_int_double(std::shared_ptr<interpreter> i, std::any& l
 
 std::any greaterthanequal_int_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<int>(lhs) >= std::any_cast<bool>(rhs);
+    return std::any_cast<int>(lhs) >= static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any greaterthanequal_int_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -2211,7 +2213,7 @@ std::any greaterthanequal_unsignedlong_double(std::shared_ptr<interpreter> i, st
 
 std::any greaterthanequal_unsignedlong_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<unsigned long>(lhs) >= std::any_cast<bool>(rhs);
+    return std::any_cast<unsigned long>(lhs) >= static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any greaterthanequal_unsignedlong_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -2247,7 +2249,7 @@ std::any greaterthanequal_float_double(std::shared_ptr<interpreter> i, std::any&
 
 std::any greaterthanequal_float_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<float>(lhs) >= std::any_cast<bool>(rhs);
+    return std::any_cast<float>(lhs) >= static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any greaterthanequal_float_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -2283,7 +2285,7 @@ std::any greaterthanequal_double_double(std::shared_ptr<interpreter> i, std::any
 
 std::any greaterthanequal_double_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<double>(lhs) >= std::any_cast<bool>(rhs);
+    return std::any_cast<double>(lhs) >= static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any greaterthanequal_double_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -2299,27 +2301,27 @@ std::any greaterthanequal_double_null(std::shared_ptr<interpreter> i, std::any& 
 
 std::any greaterthanequal_bool_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) >= std::any_cast<int>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) >= std::any_cast<int>(rhs);
 }
 
 std::any greaterthanequal_bool_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) >= std::any_cast<unsigned long>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) >= std::any_cast<unsigned long>(rhs);
 }
 
 std::any greaterthanequal_bool_float(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) >= std::any_cast<float>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) >= std::any_cast<float>(rhs);
 }
 
 std::any greaterthanequal_bool_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) >= std::any_cast<double>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) >= std::any_cast<double>(rhs);
 }
 
 std::any greaterthanequal_bool_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) >= std::any_cast<bool>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) >= static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any greaterthanequal_bool_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -2441,7 +2443,7 @@ std::any equalequal_int_double(std::shared_ptr<interpreter> i, std::any& lhs, st
 
 std::any equalequal_int_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<int>(lhs) == std::any_cast<bool>(rhs);
+    return std::any_cast<int>(lhs) == static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any equalequal_int_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -2477,7 +2479,7 @@ std::any equalequal_unsignedlong_double(std::shared_ptr<interpreter> i, std::any
 
 std::any equalequal_unsignedlong_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<unsigned long>(lhs) == std::any_cast<bool>(rhs);
+    return std::any_cast<unsigned long>(lhs) == static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any equalequal_unsignedlong_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -2513,7 +2515,7 @@ std::any equalequal_float_double(std::shared_ptr<interpreter> i, std::any& lhs, 
 
 std::any equalequal_float_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<float>(lhs) == std::any_cast<bool>(rhs);
+    return std::any_cast<float>(lhs) == static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any equalequal_float_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -2549,7 +2551,7 @@ std::any equalequal_double_double(std::shared_ptr<interpreter> i, std::any& lhs,
 
 std::any equalequal_double_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<double>(lhs) == std::any_cast<bool>(rhs);
+    return std::any_cast<double>(lhs) == static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any equalequal_double_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -2565,27 +2567,27 @@ std::any equalequal_double_null(std::shared_ptr<interpreter> i, std::any& lhs, s
 
 std::any equalequal_bool_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) == std::any_cast<int>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) == std::any_cast<int>(rhs);
 }
 
 std::any equalequal_bool_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) == std::any_cast<unsigned long>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) == std::any_cast<unsigned long>(rhs);
 }
 
 std::any equalequal_bool_float(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) == std::any_cast<float>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) == std::any_cast<float>(rhs);
 }
 
 std::any equalequal_bool_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) == std::any_cast<double>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) == std::any_cast<double>(rhs);
 }
 
 std::any equalequal_bool_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) == std::any_cast<bool>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) == static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any equalequal_bool_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -2707,7 +2709,7 @@ std::any notequal_int_double(std::shared_ptr<interpreter> i, std::any& lhs, std:
 
 std::any notequal_int_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<int>(lhs) != std::any_cast<bool>(rhs);
+    return std::any_cast<int>(lhs) != static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any notequal_int_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -2743,7 +2745,7 @@ std::any notequal_unsignedlong_double(std::shared_ptr<interpreter> i, std::any& 
 
 std::any notequal_unsignedlong_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<unsigned long>(lhs) != std::any_cast<bool>(rhs);
+    return std::any_cast<unsigned long>(lhs) != static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any notequal_unsignedlong_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -2779,7 +2781,7 @@ std::any notequal_float_double(std::shared_ptr<interpreter> i, std::any& lhs, st
 
 std::any notequal_float_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<float>(lhs) != std::any_cast<bool>(rhs);
+    return std::any_cast<float>(lhs) != static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any notequal_float_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -2815,7 +2817,7 @@ std::any notequal_double_double(std::shared_ptr<interpreter> i, std::any& lhs, s
 
 std::any notequal_double_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<double>(lhs) != std::any_cast<bool>(rhs);
+    return std::any_cast<double>(lhs) != static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any notequal_double_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -2831,27 +2833,27 @@ std::any notequal_double_null(std::shared_ptr<interpreter> i, std::any& lhs, std
 
 std::any notequal_bool_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) != std::any_cast<int>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) != std::any_cast<int>(rhs);
 }
 
 std::any notequal_bool_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) != std::any_cast<unsigned long>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) != std::any_cast<unsigned long>(rhs);
 }
 
 std::any notequal_bool_float(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) != std::any_cast<float>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) != std::any_cast<float>(rhs);
 }
 
 std::any notequal_bool_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) != std::any_cast<double>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) != std::any_cast<double>(rhs);
 }
 
 std::any notequal_bool_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
-    return std::any_cast<bool>(lhs) != std::any_cast<bool>(rhs);
+    return static_cast<int>(std::any_cast<bool>(lhs)) != static_cast<int>(std::any_cast<bool>(rhs));
 }
 
 std::any notequal_bool_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
@@ -2944,4 +2946,4 @@ std::any notequal_null_null(std::shared_ptr<interpreter> i, std::any& lhs, std::
 -
 */
 
-/* End Auto Generation */ 
+/* End Auto Generation */

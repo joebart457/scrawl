@@ -8,7 +8,7 @@
 
 std::any db_open(std::shared_ptr<interpreter> i, _args args)
 {
-	std::shared_ptr<execution_context> context = fetch_context(i);
+	std::shared_ptr<execution_context> context = Utilities().fetch_context(i);
 
 	std::shared_ptr<db_helper> db = context->get<std::shared_ptr<db_helper>>("db");
 	db->open(args.get<std::string>(0));
@@ -18,7 +18,7 @@ std::any db_open(std::shared_ptr<interpreter> i, _args args)
 
 std::any db_get(std::shared_ptr<interpreter> i, _args args)
 {
-	std::shared_ptr<execution_context> context = fetch_context(i);
+	std::shared_ptr<execution_context> context = Utilities().fetch_context(i);
 
 	std::shared_ptr<db_helper> db = context->get<std::shared_ptr<db_helper>>("db");
 
@@ -33,7 +33,7 @@ std::any db_get(std::shared_ptr<interpreter> i, _args args)
 
 std::any db_run_prepared_query(std::shared_ptr<interpreter> i, _args args)
 {
-	std::shared_ptr<execution_context> context = fetch_context(i);
+	std::shared_ptr<execution_context> context = Utilities().fetch_context(i);
 
 	std::shared_ptr<db_helper> db = context->get<std::shared_ptr<db_helper>>("db");
 
@@ -53,7 +53,7 @@ std::any db_run_prepared_query(std::shared_ptr<interpreter> i, _args args)
 // List methods
 std::any list_push(std::shared_ptr<interpreter> i, _args args)
 {
-	std::shared_ptr<execution_context> context = fetch_context(i);
+	std::shared_ptr<execution_context> context = Utilities().fetch_context(i);
 
 	unsigned long size = context->get<unsigned long>("size");
 
@@ -66,7 +66,7 @@ std::any list_push(std::shared_ptr<interpreter> i, _args args)
 
 std::any list_constructor(std::shared_ptr<interpreter> i, _args args)
 {
-	std::shared_ptr<execution_context> context = fetch_context(i);
+	std::shared_ptr<execution_context> context = Utilities().fetch_context(i);
 
 	for (unsigned int i{ 0 }; i < args.size(); i++) {
 		context->define(std::to_string(i), args.at(i), false, location());
@@ -99,6 +99,6 @@ std::any print(std::shared_ptr<interpreter> i, _args args)
 // DEBUG 
 std::any print_environment(std::shared_ptr<interpreter> i, _args args)
 {
-	fetch_context(i)->output();
+	Utilities().fetch_context(i)->output();
 	return nullptr;
 }

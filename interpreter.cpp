@@ -1,107 +1,20 @@
 #include "interpreter.h"
 
 
-#include <typeinfo>
 #include <sstream>
 
 #include "exceptions.h"
-#include "environment.h"
 #include "expression.h"
 #include "OperatorHandler.h"
 
 #include "klass_instance.h"
+#include "callable.h"
 #include "context.h"
 #include "Utilities.h"
 
 
-void check_context(std::shared_ptr<execution_context> c)
-{
-	if (c == nullptr) {
-		location loc;
-		throw ProgramException("cannot execute code in null execution_context", loc, Severity().FATAL());
-	}
-}
-
-
-void check_context(std::shared_ptr<interpreter> i)
-{
-	if (i == nullptr) {
-		location loc;
-		throw ProgramException("cannot execute code in null context", loc, Severity().FATAL());
-	}
-}
-
-
-void check_context(std::shared_ptr<interpreter> i, const location& loc)
-{
-	if (i == nullptr) {
-		throw ProgramException("cannot execute code in null context", loc, Severity().FATAL());
-	}
-}
-
-std::shared_ptr<execution_context> fetch_context(std::shared_ptr<interpreter> i)
-{
-	auto context_ptr = i->get_context();
-	if (i == nullptr || context_ptr == nullptr) {
-		location loc;
-		throw ProgramException("cannot execute code in null context", loc, Severity().FATAL());
-	}
-	return context_ptr;
-}
-
-
-std::string createOperatorSignature(std::string szName, std::vector<std::any> args)
-{
-	std::ostringstream oss;
-	oss << szName << "(";
-	if (args.size() > 0) {
-		std::string type_name = args.at(0).type().name();
-		if (args.at(0).type() == typeid(klass_instance)) {
-			type_name = std::any_cast<klass_instance>(args.at(0)).getType();
-		}
-		oss << type_name;
-	}
-	for (unsigned int i{ 1 }; i < args.size(); i++) {
-		std::string type_name = args.at(i).type().name();
-		if (args.at(i).type() == typeid(klass_instance)) {
-			type_name = std::any_cast<klass_instance>(args.at(i)).getType();
-		}
-		oss << "," << type_name;
-	}
-	oss << ")";
-	return oss.str();
-}
-
-std::shared_ptr<callable> getCallable(std::any callee) {
-	if (callee.type() == typeid(std::shared_ptr<callable>)) {
-		return std::any_cast<std::shared_ptr<callable>>(callee);
-	}
-	else if (callee.type() == typeid(std::shared_ptr<native_fn>)) {
-		return std::any_cast<std::shared_ptr<native_fn>>(callee);
-	}
-	else if (callee.type() == typeid(std::shared_ptr<binary_fn>)) {
-		return std::any_cast<std::shared_ptr<binary_fn>>(callee);
-	}
-	else if (callee.type() == typeid(std::shared_ptr<unary_fn>)) {
-		return std::any_cast<std::shared_ptr<unary_fn>>(callee);
-	}
-	else if (callee.type() == typeid(std::shared_ptr<custom_fn>)) {
-		return std::any_cast<std::shared_ptr<custom_fn>>(callee);
-	}
-	else {
-		throw ProgramException("unable to convert type " + std::string(callee.type().name()) + " to callable type", location());
-	}
-}
-
-interpreter::interpreter(std::shared_ptr<execution_context> context, std::shared_ptr<OperatorHandler> opHandler)
-	:m_context{ context }, m_opHandler{ opHandler }{}
-interpreter::interpreter()
-{
-	std::shared_ptr<activation_record> ar = std::make_shared<activation_record>();
-	ar->environment = std::make_shared<scope<std::any>>("default_empty");
-	ar->id = -1;
-	m_context = std::make_shared<execution_context>(ar);
-}
+interpreter::interpreter(std::shared_ptr<execution_context> context)
+	:m_context{ context }{}
 
 std::shared_ptr<execution_context> interpreter::get_context()
 {
@@ -161,10 +74,7 @@ void interpreter::acceptVariableDeclaration(std::shared_ptr<variable_declaration
 {
 	if (var_decl->m_value != nullptr) {
 		std::any val = acceptExpression(var_decl->m_value);
-		std::string type = val.type().name();
-		if (val.type() == typeid(klass_instance)) {
-			type = std::any_cast<klass_instance>(val).getType();
-		}
+		std::string type = Utilities().getTypeString(val);
 		if (var_decl->m_szTypename != "" && type != var_decl->m_szTypename) {
 			throw ProgramException("type mismatch in variable declaration: " + type + " != " + var_decl->m_szTypename, var_decl->m_loc);
 		}
@@ -288,7 +198,8 @@ void interpreter::acceptSwitchStatement(std::shared_ptr<switch_statement> switch
 			std::any rhs = acceptExpression(expr);
 			std::vector<std::any> arguments = { test, rhs };
 
-			if (Utilities().isTruthy(m_opHandler->getOperator(createOperatorSignature("==", arguments))->call(std::static_pointer_cast<interpreter>(shared_from_this()), _args(arguments))))
+			if (Utilities().isTruthy(m_context->getOperator("==", arguments)
+				->call(std::static_pointer_cast<interpreter>(shared_from_this()), _args(arguments))))
 			{
 				matched = true;
 				break;
@@ -402,7 +313,7 @@ std::any interpreter::acceptBinary(std::shared_ptr<binary> expr_binary)
 
 	std::vector<std::any> arguments = { lhs, rhs };
 
-	return m_opHandler->getOperator(createOperatorSignature(expr_binary->op, { lhs, rhs }))
+	return m_context->getOperator(expr_binary->op, { lhs, rhs })
 		->call(std::static_pointer_cast<interpreter>(shared_from_this()), _args(arguments));
 }
 
@@ -413,7 +324,7 @@ std::any interpreter::acceptUnary(std::shared_ptr<unary> expr_unary)
 	std::vector<std::any> arguments = { rhs };
 
 
-	return m_opHandler->getOperator(createOperatorSignature(expr_unary->op, { rhs }))
+	return m_context->getOperator(expr_unary->op, { rhs })
 		->call(std::static_pointer_cast<interpreter>(shared_from_this()), _args(arguments));
 }
 
@@ -428,7 +339,7 @@ std::any interpreter::acceptCall(std::shared_ptr<call> expr_call)
 
 	std::any callee = acceptExpression(expr_call->lhs);
 	
-	std::shared_ptr<callable> callee_internal = getCallable(callee);
+	std::shared_ptr<callable> callee_internal = Utilities().getCallable(callee);
 
 	return callee_internal->call(std::static_pointer_cast<interpreter>(shared_from_this()), _args(arguments));
 }
@@ -480,7 +391,7 @@ std::any interpreter::acceptInitializer(std::shared_ptr<initializer> expr_intial
 	std::shared_ptr<klass_definition> klass_def = std::any_cast<std::shared_ptr<klass_definition>>(klass);
 	klass_instance ki = klass_def->create();
 	
-	std::shared_ptr<callable> constructor = getCallable(ki.Get("constructor", expr_intializer->m_loc));
+	std::shared_ptr<callable> constructor = Utilities().getCallable(ki.Get("constructor", expr_intializer->m_loc));
 	constructor->call(std::static_pointer_cast<interpreter>(shared_from_this()), _args(args));
 	return ki;
 }
@@ -495,9 +406,13 @@ std::any interpreter::assert_or_convert_type(const param& p, std::any obj, const
 	if (p.type == "") {
 		return obj;
 	}
+
+	std::string szType = Utilities().getTypeString(obj);
+
 	if (p.class_specifier != "") {
+		// Need this test for klass_instance type for now because of how we use class_specifier
 		if (obj.type() == typeid(klass_instance)) {
-			if (std::any_cast<klass_instance>(obj).getType() != p.class_specifier) {
+			if (szType != p.class_specifier) {
 				throw ProgramException("Type mismatch klass_instance::" + std::any_cast<klass_instance>(obj).getType() + " != " + p.type + "::" + p.class_specifier, loc, Severity().MEDIUM());
 			}
 			return obj;
@@ -505,7 +420,7 @@ std::any interpreter::assert_or_convert_type(const param& p, std::any obj, const
 		throw ProgramException("Type mismatch " + std::string(obj.type().name()) + " != " + p.type + "::" + p.class_specifier, loc, Severity().MEDIUM());
 	}
 	else {
-		if (obj.type().name() != p.type) {
+		if (szType != p.type) {
 			throw ProgramException("Type mismatch " + std::string(obj.type().name()) + " != " + p.type, loc, Severity().MEDIUM());
 		}
 		return obj;

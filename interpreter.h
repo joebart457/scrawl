@@ -10,22 +10,13 @@
 #include "expression.h"
 
 class execution_context;
-
-void check_context(std::shared_ptr<interpreter> i);
-void check_context(std::shared_ptr<interpreter> i, const location& loc);
-void check_context(std::shared_ptr<execution_context> i);
-std::shared_ptr<execution_context> fetch_context(std::shared_ptr<interpreter> i);
-
-
-class OperatorHandler;
 struct activation_record;
 
 class interpreter:
 	public std::enable_shared_from_this<interpreter>
 {
 public:
-	interpreter(std::shared_ptr<execution_context> context, std::shared_ptr<OperatorHandler> opHandler);
-	interpreter();
+	interpreter(std::shared_ptr<execution_context> context);
 	~interpreter(){}
 
 	void interpret(std::vector<std::shared_ptr<statement>> stmts);
@@ -70,7 +61,6 @@ private:
 
 	std::shared_ptr<activation_record> acceptBlock_KeepEnvironment(std::shared_ptr<block> blk);
 	std::shared_ptr<execution_context> m_context{ nullptr };
-	std::shared_ptr<OperatorHandler> m_opHandler{ nullptr };
 	unsigned int m_arIndex{ 0 };
 };
 
