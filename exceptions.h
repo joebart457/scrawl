@@ -104,8 +104,43 @@ public:
 		:ProgramException("PanicException", "", loc, Severity().LOW()), m_value{ val }{}
 	~PanicException() {}
 
-	std::any value() { return m_value; }
+	virtual std::any value() { return m_value; }
 
 protected:
 	std::any m_value;
 };
+
+
+class IOException :
+	public PanicException {
+public:
+	IOException(std::any val, const location& loc)
+		:PanicException(val, loc){}
+	~IOException() {}
+
+protected:
+	std::any m_value;
+};
+
+
+#include "klass_instance.h"
+
+IOException BuildIOException(const std::string& msg) {
+	std::shared_ptr<activation_record> list_env_ar = std::make_shared<activation_record>();
+	list_env_ar->szAlias = "list";
+	list_env_ar->environment = std::make_shared<scope<std::any>>();
+	list_env_ar->environment->define("msg",
+		msg, true);
+
+	list_env_ar->environment->define("constructor",
+		std::make_shared<native_fn>("constructor", list_constructor, list_env_ar)->setVariadic());
+
+	list_env_ar->environment->define("size",
+		(unsigned long)0);
+
+	e->define("list",
+		std::make_shared<klass_definition>("list", list_env_ar),
+		true);
+
+
+}

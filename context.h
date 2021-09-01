@@ -55,13 +55,18 @@ public:
 
 		m_records.push_back(ar);
 		m_index++;
+		if (m_index >= MAX_CALLSTACK) {
+			pop_ar();
+			throw ProgramException("stack overflow", location());
+		}
 	}
 
 	std::shared_ptr<activation_record> pop_ar()
 	{
-		if (m_records.size() > 0) {
+		if (m_records.size() > 0 && m_index > 0) {
 			std::shared_ptr<activation_record> ar = m_records.at(m_records.size() - 1);
 			m_records.pop_back();
+			m_index--;
 			return ar;
 		}
 		throw std::exception("unable to pop activation record; none exist");
@@ -205,6 +210,9 @@ private:
 		oss << "\r\n</" << (ar.szAlias.empty() ? ":" + std::to_string(ar.id) : ar.szAlias) << ">";
 		return oss.str();
 	}
+
+
+	const unsigned int MAX_CALLSTACK{ 100 };
 
 	unsigned int m_index{ 0 };
 	std::vector<std::shared_ptr<activation_record>> m_records;

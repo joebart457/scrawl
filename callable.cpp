@@ -164,7 +164,6 @@ std::any custom_fn::call(std::shared_ptr<interpreter> c, _args arguments)
 		throw pe;
 	}
 	catch (ProgramException pe) {
-
 		// Reset environment
 		context->pop_ar();
 		context->pop_ar();
