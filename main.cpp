@@ -27,7 +27,8 @@ int main(int argc, char** argv)
 			continue;
 		}
 		try {
-			i->interpret(p.parse(t->tokenize(input, showTokens)));
+			//i->interpret(p.parse(t->tokenize(input, showTokens)));
+			i->interpret(p.parse(t->tokenize(FileHandle().readFileAsString("C:\\Users\\system.developer\\source\\repos\\cyber\\Utils\\op_create.scrwl"), showTokens)));
 		}
 		catch (ParsingException p) {
 			std::cout << p.fullTrace() << std::endl;

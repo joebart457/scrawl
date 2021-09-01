@@ -370,7 +370,10 @@ std::any equalequal_int_string(std::shared_ptr<interpreter> i, std::any& lhs, st
 {
 	throw ProgramException("unsupported operation", location());
 }
-
+std::any equalequal_int_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return false;
+}
 
 // Not equal
 
@@ -399,7 +402,10 @@ std::any notequal_int_string(std::shared_ptr<interpreter> i, std::any& lhs, std:
 {
 	throw ProgramException("unsupported operation", location());
 }
-
+std::any notequal_int_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return true;
+}
 
 /*
 -
@@ -736,7 +742,10 @@ std::any equalequal_unsignedlong_string(std::shared_ptr<interpreter> i, std::any
 {
 	throw ProgramException("unsupported operation", location());
 }
-
+std::any equalequal_unsignedlong_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return false;
+}
 
 // Not equal
 
@@ -764,6 +773,10 @@ std::any notequal_unsignedlong_bool(std::shared_ptr<interpreter> i, std::any& lh
 std::any notequal_unsignedlong_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
 {
 	throw ProgramException("unsupported operation", location());
+}
+std::any notequal_unsignedlong_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return true;
 }
 
 
@@ -1102,6 +1115,10 @@ std::any equalequal_float_string(std::shared_ptr<interpreter> i, std::any& lhs, 
 {
 	throw ProgramException("unsupported operation", location());
 }
+std::any equalequal_float_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return false;
+}
 
 
 // Not equal
@@ -1131,7 +1148,10 @@ std::any notequal_float_string(std::shared_ptr<interpreter> i, std::any& lhs, st
 {
 	throw ProgramException("unsupported operation", location());
 }
-
+std::any notequal_float_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return true;
+}
 
 /*
 -
@@ -1467,7 +1487,10 @@ std::any equalequal_double_string(std::shared_ptr<interpreter> i, std::any& lhs,
 {
 	throw ProgramException("unsupported operation", location());
 }
-
+std::any equalequal_double_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return false;
+}
 
 // Not equal
 
@@ -1496,7 +1519,10 @@ std::any notequal_double_string(std::shared_ptr<interpreter> i, std::any& lhs, s
 {
 	throw ProgramException("unsupported operation", location());
 }
-
+std::any notequal_double_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return true;
+}
 
 /*
 -
@@ -1831,7 +1857,10 @@ std::any equalequal_bool_string(std::shared_ptr<interpreter> i, std::any& lhs, s
 {
 	throw ProgramException("unsupported operation", location());
 }
-
+std::any equalequal_bool_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return false;
+}
 
 // Not equal
 
@@ -1860,7 +1889,10 @@ std::any notequal_bool_string(std::shared_ptr<interpreter> i, std::any& lhs, std
 {
 	throw ProgramException("unsupported operation", location());
 }
-
+std::any notequal_bool_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return true;
+}
 
 /*
 -
@@ -2208,7 +2240,10 @@ std::any equalequal_string_string(std::shared_ptr<interpreter> i, std::any& lhs,
 {
 	return std::any_cast<std::string>(lhs) == std::any_cast<std::string>(rhs);
 }
-
+std::any equalequal_string_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return false;
+}
 
 // Not equal
 
@@ -2237,10 +2272,87 @@ std::any notequal_string_string(std::shared_ptr<interpreter> i, std::any& lhs, s
 {
 	return std::any_cast<std::string>(lhs) != std::any_cast<std::string>(rhs);
 }
-
+std::any notequal_string_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return true;
+}
 
 /*
 -
 - end string
+-
+*/
+
+
+/*
+-
+- start null
+-
+*/
+
+
+std::any equalequal_null_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return false;
+}
+std::any equalequal_null_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return false;
+}
+std::any equalequal_null_float(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return false;
+}
+std::any equalequal_null_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return false;
+}
+std::any equalequal_null_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return false;
+}
+std::any equalequal_null_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return false;
+}
+std::any equalequal_null_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return true;
+}
+
+
+std::any notequal_null_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return true;
+}
+std::any notequal_null_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return true;
+}
+std::any notequal_null_float(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return true;
+}
+std::any notequal_null_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return true;
+}
+std::any notequal_null_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return true;
+}
+std::any notequal_null_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return true;
+}
+std::any notequal_null_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs)
+{
+	return false;
+}
+
+
+/*
+-
+- end null
 -
 */

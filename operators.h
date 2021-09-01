@@ -101,6 +101,7 @@ std::any equalequal_int_float(std::shared_ptr<interpreter> i, std::any& lhs, std
 std::any equalequal_int_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any equalequal_int_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any equalequal_int_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+std::any equalequal_int_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 
 std::any notequal_int_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any notequal_int_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
@@ -108,7 +109,7 @@ std::any notequal_int_float(std::shared_ptr<interpreter> i, std::any& lhs, std::
 std::any notequal_int_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any notequal_int_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any notequal_int_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
-
+std::any notequal_int_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 
 
 /*
@@ -190,6 +191,7 @@ std::any equalequal_unsignedlong_float(std::shared_ptr<interpreter> i, std::any&
 std::any equalequal_unsignedlong_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any equalequal_unsignedlong_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any equalequal_unsignedlong_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+std::any equalequal_unsignedlong_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 
 std::any notequal_unsignedlong_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any notequal_unsignedlong_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
@@ -197,6 +199,7 @@ std::any notequal_unsignedlong_float(std::shared_ptr<interpreter> i, std::any& l
 std::any notequal_unsignedlong_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any notequal_unsignedlong_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any notequal_unsignedlong_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+std::any notequal_unsignedlong_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 
 
 
@@ -280,6 +283,7 @@ std::any equalequal_float_float(std::shared_ptr<interpreter> i, std::any& lhs, s
 std::any equalequal_float_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any equalequal_float_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any equalequal_float_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+std::any equalequal_float_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 
 std::any notequal_float_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any notequal_float_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
@@ -287,7 +291,7 @@ std::any notequal_float_float(std::shared_ptr<interpreter> i, std::any& lhs, std
 std::any notequal_float_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any notequal_float_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any notequal_float_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
-
+std::any notequal_float_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 
 
 
@@ -371,6 +375,8 @@ std::any equalequal_double_float(std::shared_ptr<interpreter> i, std::any& lhs, 
 std::any equalequal_double_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any equalequal_double_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any equalequal_double_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+std::any equalequal_double_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+
 
 std::any notequal_double_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any notequal_double_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
@@ -378,8 +384,7 @@ std::any notequal_double_float(std::shared_ptr<interpreter> i, std::any& lhs, st
 std::any notequal_double_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any notequal_double_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any notequal_double_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
-
-
+std::any notequal_double_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 
 
 
@@ -462,6 +467,8 @@ std::any equalequal_bool_float(std::shared_ptr<interpreter> i, std::any& lhs, st
 std::any equalequal_bool_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any equalequal_bool_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any equalequal_bool_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+std::any equalequal_bool_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+
 
 std::any notequal_bool_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any notequal_bool_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
@@ -469,6 +476,7 @@ std::any notequal_bool_float(std::shared_ptr<interpreter> i, std::any& lhs, std:
 std::any notequal_bool_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any notequal_bool_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any notequal_bool_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+std::any notequal_bool_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 
 
 
@@ -551,6 +559,8 @@ std::any equalequal_string_float(std::shared_ptr<interpreter> i, std::any& lhs, 
 std::any equalequal_string_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any equalequal_string_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any equalequal_string_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+std::any equalequal_string_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+
 
 std::any notequal_string_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any notequal_string_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
@@ -558,3 +568,29 @@ std::any notequal_string_float(std::shared_ptr<interpreter> i, std::any& lhs, st
 std::any notequal_string_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any notequal_string_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
 std::any notequal_string_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+std::any notequal_string_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+
+
+/*
+-
+- std::nullptr_t
+-
+*/
+
+
+std::any equalequal_null_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+std::any equalequal_null_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+std::any equalequal_null_float(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+std::any equalequal_null_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+std::any equalequal_null_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+std::any equalequal_null_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+std::any equalequal_null_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+
+
+std::any notequal_null_int(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+std::any notequal_null_unsignedlong(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+std::any notequal_null_float(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+std::any notequal_null_double(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+std::any notequal_null_bool(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+std::any notequal_null_string(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);
+std::any notequal_null_null(std::shared_ptr<interpreter> i, std::any& lhs, std::any& rhs);

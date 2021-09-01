@@ -74,6 +74,12 @@ std::any native_fn::call(std::shared_ptr<interpreter> c, _args args)
 		
 		throw ret;
 	}
+	catch (PanicException pe) {
+		// Reset environment
+		context->pop_ar();
+
+		throw pe;
+	}
 	catch (ProgramException pe) {
 		// Reset environment
 		context->pop_ar();
@@ -147,6 +153,15 @@ std::any custom_fn::call(std::shared_ptr<interpreter> c, _args arguments)
 
 		// Return value
 		return ret.value();
+	}
+	catch (PanicException pe) {
+
+		// Reset environment
+		context->pop_ar();
+		context->pop_ar();
+
+		// Return value
+		throw pe;
 	}
 	catch (ProgramException pe) {
 

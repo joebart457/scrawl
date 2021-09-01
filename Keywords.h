@@ -25,6 +25,7 @@ public:
 	static std::string CHAR() { return "char"; }
 	static std::string STRING() { return "string"; }
 	static std::string IGNORE(){ return "ignore"; }
+	static std::string BOOL() { return "bool"; }
 
 
 	static std::string DIRECTIVE() { return "directive"; }

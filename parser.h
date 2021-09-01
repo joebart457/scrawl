@@ -625,7 +625,8 @@ private:
 		Keywords().FLOAT(),
 		Keywords().DOUBLE(),
 		Keywords().CHAR(),
-		Keywords().STRING()
+		Keywords().STRING(),
+		Keywords().BOOL()
 	};
 
 	bool match_variable_declaration() {

@@ -127,6 +127,10 @@ void interpreter::acceptStatement(std::shared_ptr<statement> stmt) {
 		catch (ReturnException pe) {
 			throw pe;
 		}
+		catch (PanicException pe) {
+			pe.addStackTrace("error in " + stmt->getType(), stmt->getLocation());
+			throw pe;
+		}
 		catch (ProgramException pe) {
 			pe.addStackTrace("error in " + stmt->getType(), stmt->getLocation());
 			throw pe;
@@ -227,12 +231,17 @@ void interpreter::acceptBlock(std::shared_ptr<block> blk)
 		m_context->pop_ar();
 		throw pe;
 	}
+	catch (PanicException pe) {
+		m_context->pop_ar();
+		throw pe;
+	}
 	catch (ProgramException pe) {
 		m_context->pop_ar();
 		throw pe;
 	}
 	m_context->pop_ar();
 }
+
 
 std::shared_ptr<activation_record> interpreter::acceptBlock_KeepEnvironment(std::shared_ptr<block> blk)
 {
@@ -245,6 +254,10 @@ std::shared_ptr<activation_record> interpreter::acceptBlock_KeepEnvironment(std:
 		throw pe;
 	}
 	catch (ReturnException pe) {
+		m_context->pop_ar();
+		throw pe;
+	}
+	catch (PanicException pe) {
 		m_context->pop_ar();
 		throw pe;
 	}
@@ -296,6 +309,9 @@ void interpreter::acceptSwitchStatement(std::shared_ptr<switch_statement> switch
 
 void interpreter::acceptRunRecoverStatement(std::shared_ptr<run_recover_statement> rr_stmt)
 {
+	if (rr_stmt->m_szName != "") {
+		m_context->define(rr_stmt->m_szName, nullptr, true, rr_stmt->m_loc);
+	}
 	try {
 		acceptStatement(rr_stmt->m_try);
 	}
@@ -308,10 +324,8 @@ void interpreter::acceptRunRecoverStatement(std::shared_ptr<run_recover_statemen
 		if (rr_stmt->m_szTypename != "" && type != rr_stmt->m_szTypename) {
 			throw err;
 		}
-		else {
-			if (rr_stmt->m_szName != "") {
-				m_context->define(rr_stmt->m_szName, val, false, rr_stmt->getLocation());
-			}
+		if (rr_stmt->m_szName != "") {
+			m_context->define(rr_stmt->m_szName, val, true, rr_stmt->getLocation());
 		}
 	}
 }
@@ -337,6 +351,10 @@ std::any interpreter::acceptExpression(std::shared_ptr<expression> expr)
 	}
 	try {
 		return expr->visit(std::static_pointer_cast<interpreter>(shared_from_this()));
+	}
+	catch (PanicException pe) {
+		pe.addStackTrace("error in " + expr->getType(), expr->getLocation());
+		throw pe;
 	}
 	catch (ProgramException pe) {
 		pe.addStackTrace("error in " + expr->getType(), expr->getLocation());
