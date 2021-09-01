@@ -16,16 +16,14 @@ public:
 	FileHandle();
 	~FileHandle();
 	void copyFile(const std::string& source, const std::string& dest);
-	bool removeAll(const std::string& source);
+
+	uintmax_t removeAll(const std::string& source);
 	std::vector<std::string> readFile(const std::string& szFilepath);
 	std::string readFileAsString(const std::string& filepath);
-	void writeToFile(const std::string& filepath, std::vector<std::string> data);
+	void writeToFile(const std::string& filepath, std::vector<std::string> data, bool overwriteContents = true);
 	void writeLine(const std::string& filepath, std::string data, bool overwriteContents = true);
 	std::string readLine(const std::string& filepath, unsigned int lineNumber);
 	unsigned int countLines(const std::string& filepath);
-
-	std::vector<std::string> split(std::string str, char splitOn);
-	std::vector<std::string> splitOnFirst(std::string str, char splitOn);
 
 	static std::string current_path()
 	{
@@ -70,7 +68,7 @@ void FileHandle::copyFile(const std::string& source, const std::string& dest) {
 	std::filesystem::copy(source, dest, copyOptions);
 }
 
-bool FileHandle::removeAll(const std::string& source) {
+uintmax_t FileHandle::removeAll(const std::string& source) {
 	return std::filesystem::remove_all(source);
 }
 
@@ -87,7 +85,7 @@ std::vector<std::string> FileHandle::readFile(const std::string& filepath) {
 		return fileData;
 	}
 	else {
-		throw ProgramException("unable to perform io operation on file '" + filepath + "'; file not found or unable to open", location());
+		throw PanicException(IOException("unable to perform io operation on file '" + filepath + "'; file not found or unable to open", location()), location());
 	}
 }
 
@@ -108,7 +106,7 @@ std::string FileHandle::readLine(const std::string& filepath, unsigned int lineN
 		return fileData;
 	}
 	else {
-		throw ProgramException("unable to perform io operation on file '" + filepath + "'; file not found or unable to open", location());
+		throw PanicException(IOException("unable to perform io operation on file '" + filepath + "'; file not found or unable to open", location()), location());
 	}
 }
 
@@ -124,7 +122,7 @@ unsigned int FileHandle::countLines(const std::string& filepath) {
 		return counter;
 	}
 	else {
-		throw ProgramException("unable to perform io operation on file '" + filepath + "'; file not found or unable to open", location());
+		throw PanicException(IOException("unable to perform io operation on file '" + filepath + "'; file not found or unable to open", location()), location());
 	}
 }
 
@@ -141,13 +139,13 @@ std::string FileHandle::readFileAsString(const std::string& filepath)
 		return fileData;
 	}
 	else {
-		throw ProgramException("unable to perform io operation on file '" + filepath + "'; file not found or unable to open", location());
+		throw PanicException(IOException("unable to perform io operation on file '" + filepath + "'; file not found or unable to open", location()), location());
 	}
 }
 
 
-void FileHandle::writeToFile(const std::string& filepath, std::vector<std::string> data) {
-	std::ofstream f(filepath);
+void FileHandle::writeToFile(const std::string& filepath, std::vector<std::string> data, bool overwriteContents) {
+	std::ofstream f(filepath, overwriteContents ? std::ofstream::out : std::ofstream::out | std::ofstream::app);
 	if (f.is_open()) {
 		for (unsigned int i{ 0 }; i < data.size(); i++) {
 			f << data[i] << "\n";
@@ -156,7 +154,7 @@ void FileHandle::writeToFile(const std::string& filepath, std::vector<std::strin
 		return;
 	}
 	else {
-		throw ProgramException("unable to perform io operation on file '" + filepath + "'; file not found or unable to open", location());
+		throw PanicException(IOException("unable to perform io operation on file '" + filepath + "'; file not found or unable to open", location()), location());
 	}
 }
 
@@ -168,52 +166,10 @@ void FileHandle::writeLine(const std::string& filepath, std::string data, bool o
 		return;
 	}
 	else {
-		throw ProgramException("unable to perform io operation on file '" + filepath + "'; file not found or unable to open", location());
+		throw PanicException(IOException("unable to perform io operation on file '" + filepath + "'; file not found or unable to open", location()), location());
 	}
 }
 
-
-std::vector<std::string> FileHandle::split(std::string line, char splitOn) {
-	std::vector<std::string> newString;
-	std::vector<int> indices;
-	indices.push_back(-1);
-	for (unsigned int i = 0; i < line.size(); i++) {
-		if (line[i] == splitOn) {
-			indices.push_back(i);
-		}
-	}//end for loop
-	indices.push_back(line.size());//was indices size-1
-	for (unsigned int j = 0; j < indices.size() - 1; j++) {
-
-		std::string sub = line.substr(indices[j] + 1, indices[j + 1] - indices[j] - 1);
-		//cout << "sub: "<<sub << endl;
-		newString.push_back(sub);
-	}//end for loop
-	if (newString.size() == 0) {
-		newString.push_back(line);
-	}
-
-	return newString;
-
-}
-
-std::vector<std::string> FileHandle::splitOnFirst(std::string str, char splitOn) {
-	std::vector<std::string> newStr;
-	for (unsigned int i{ 0 }; i < str.size(); i++) {
-		if (str[i] == splitOn) {
-			auto tempStr = str.substr(i, str.size() - 1);
-			auto tempStr2 = str.substr(i);
-			newStr.push_back(tempStr);
-			newStr.push_back(tempStr2);
-		}
-	}
-	if (newStr.size() == 0) {
-		return { str };
-	}
-	else {
-		return newStr;
-	}
-}
 
 
 #endif

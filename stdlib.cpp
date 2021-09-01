@@ -2,6 +2,7 @@
 
 
 #include "db_framework.h"
+#include "ufhndl.hpp"
 #include "Utilities.h"
 
 // DB Methods
@@ -101,4 +102,76 @@ std::any print_environment(std::shared_ptr<interpreter> i, _args args)
 {
 	Utilities().fetch_context(i)->output();
 	return nullptr;
+}
+
+
+
+// FileSystem
+std::any fs_copy_file(std::shared_ptr<interpreter> i, _args args)
+{
+	FileHandle().copyFile(args.get<std::string>(0), args.get<std::string>(1));
+}
+
+std::any fs_remove_all(std::shared_ptr<interpreter> i, _args args)
+{
+	uintmax_t removed = FileHandle().removeAll(args.get<std::string>(0));
+	return removed;
+}
+
+std::any fs_read_file(std::shared_ptr<interpreter> i, _args args)
+{
+	// Refactor to return list instead of native vector
+	return FileHandle().readFile(args.get<std::string>(0));
+}
+
+std::any fs_real_file_to_string(std::shared_ptr<interpreter> i, _args args)
+{
+	return FileHandle().readFileAsString(args.get<std::string>(0));
+}
+
+std::any fs_read_line_from_file(std::shared_ptr<interpreter> i, _args args)
+{
+	return FileHandle().readLine(args.get<std::string>(0), args.get<unsigned long>(1));
+}
+
+std::any fs_write_to_file(std::shared_ptr<interpreter> i, _args args)
+{
+	FileHandle().writeToFile(args.get<std::string>(0), args.get<std::vector<std::string>>(1), args.get<bool>(2));
+}
+
+std::any fs_write_line_to_file(std::shared_ptr<interpreter> i, _args args)
+{
+	FileHandle().writeLine(args.get<std::string>(0), args.get<std::string>(1), args.get<bool>(2));
+}
+
+std::any fs_count_lines(std::shared_ptr<interpreter> i, _args args)
+{
+	unsigned long lineCount = FileHandle().countLines(args.get<std::string>(0));
+	return lineCount;
+}
+
+std::any fs_current_path(std::shared_ptr<interpreter> i, _args args)
+{
+	return FileHandle().current_path();
+}
+
+std::any fs_parent_path(std::shared_ptr<interpreter> i, _args args)
+{
+	return FileHandle().parent_path(args.get<std::string>(0));
+}
+
+std::any fs_rename_file(std::shared_ptr<interpreter> i, _args args)
+{
+	FileHandle().rename(args.get<std::string>(0), args.get<std::string>(1));
+}
+
+std::any fs_file_size(std::shared_ptr<interpreter> i, _args args)
+{
+	uintmax_t size = FileHandle().file_size(args.get<std::string>(0));
+	return size;
+}
+
+std::any fs_exists(std::shared_ptr<interpreter> i, _args args)
+{
+	return FileHandle().exists(args.get<std::string>(0));
 }

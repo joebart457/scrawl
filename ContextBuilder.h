@@ -73,6 +73,40 @@ public:
 			std::make_shared<klass_definition>("list", list_env_ar),
 			true);
 
+        // FileSystem
+
+        std::shared_ptr<activation_record> fs_env_ar = std::make_shared<activation_record>();
+        fs_env_ar->szAlias = "FileSystem";
+        fs_env_ar->environment = std::make_shared<scope<std::any>>();
+        fs_env_ar->environment->define("copy",
+            std::make_shared<native_fn>("copy", fs_copy_file, fs_env_ar)
+            ->registerParameter(BuildParameter<std::string>())
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        fs_env_ar->environment->define("remove_all",
+            std::make_shared<native_fn>("remove_all", fs_remove_all, fs_env_ar)
+            ->registerParameter(BuildParameter<std::string>())
+        );
+        fs_env_ar->environment->define("read",
+            std::make_shared<native_fn>("read", fs_read_file, fs_env_ar)
+            ->registerParameter(BuildParameter<std::string>())
+        );
+
+
+        std::any fs_copy_file(std::shared_ptr<interpreter> i, _args args);
+        std::any fs_remove_all(std::shared_ptr<interpreter> i, _args args);
+        std::any fs_read_file(std::shared_ptr<interpreter> i, _args args);
+        std::any fs_real_file_to_string(std::shared_ptr<interpreter> i, _args args);
+        std::any fs_read_line_from_file(std::shared_ptr<interpreter> i, _args args);
+        std::any fs_write_to_file(std::shared_ptr<interpreter> i, _args args);
+        std::any fs_write_line_to_file(std::shared_ptr<interpreter> i, _args args);
+        std::any fs_count_lines(std::shared_ptr<interpreter> i, _args args);
+        std::any fs_current_path(std::shared_ptr<interpreter> i, _args args);
+        std::any fs_parent_path(std::shared_ptr<interpreter> i, _args args);
+        std::any fs_rename_file(std::shared_ptr<interpreter> i, _args args);
+        std::any fs_file_size(std::shared_ptr<interpreter> i, _args args);
+        std::any fs_exists(std::shared_ptr<interpreter> i, _args args);
+
 
 		std::shared_ptr<activation_record> db_env_ar = std::make_shared<activation_record>();
 		db_env_ar->szAlias = "db";
